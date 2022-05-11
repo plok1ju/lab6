@@ -1,29 +1,79 @@
 package itmo;
 
+import itmo.collection.HashTableCollection;
+import itmo.io.ClientPrinter;
+import itmo.io.ClientReader;
+import itmo.io.ConsoleScan;
+import itmo.io.Scannable;
+import itmo.manager.CommandsManager;
+import itmo.manager.file.ReaderXml;
+import itmo.model.Dragon;
+
 import java.io.*;
 import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Scanner;
 
 public class Main {
+
+    private static HashTableCollection<Integer, Dragon> collection = new HashTableCollection<>();
     public static void main(String[] args) throws IOException {
         Selector selector = Selector.open();
-        SocketChannel clientSocketChannel = SocketChannel.open(new InetSocketAddress(8181));
-        clientSocketChannel.write(ByteBuffer.wrap(String.valueOf("helllo").getBytes()));
+        SocketChannel clientSocketChannel = null;
+        try {
+            clientSocketChannel = SocketChannel.open(new InetSocketAddress("localhost", 8181));
+        } catch (Exception e){
+            System.out.println("Cannot connect to the server");
+            System.exit(1);
+        }
+        clientSocketChannel.configureBlocking(false);
+        int ops = clientSocketChannel.validOps();
+        SelectionKey selectionKey = clientSocketChannel.register(selector, ops, null);
+
+        ReaderXml readerXml = new ReaderXml();
+        try {
+            collection = readerXml.returnCollect();
+        } catch (Exception e) {
+            System.out.println("Что-то пошло не так: " + e.getMessage());
+
+        }
+        Scannable scannable = new ConsoleScan();
+        CommandsManager commandsManager = new CommandsManager(collection);
+        ClientPrinter clientPrinter = new ClientPrinter(clientSocketChannel);
+        ClientReader clientReader = new ClientReader(clientSocketChannel);
+        getCommand(commandsManager, scannable, clientPrinter, clientReader);
+
         clientSocketChannel.close();
     }
 
-    private static void sendMessage(Socket clientSocket) throws IOException {
+    private static void getCommand(CommandsManager commandsManager, Scannable scannable, ClientPrinter clientPrinter, ClientReader clientReader) {
+        try {
+            System.out.println("Введите команду: ");
+            String commandString = scannable.scanString().trim();
+
+            clientPrinter.printLine(commandString);
+            System.out.println(clientReader.scanString());
+
+            /*Command command = commandsManager.getCommand(commandString, scannable, true);
+            command.execute();*/
+
+        } catch (Exception e) {
+            System.out.println("Что-то пошло не так: " + e.getMessage());
+        }
+        getCommand(commandsManager, scannable, clientPrinter, clientReader);
+    }
+
+    private static void sendMessage(SocketChannel clientSocketChannel) throws IOException {
         Scanner scanner = new Scanner(System.in);
-        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+        ClientPrinter clientPrinter = new ClientPrinter(clientSocketChannel);
         while (true){
-            java.lang.String message = scanner.nextLine();
-            out.println(message);
+            if (!scanner.hasNext()){
+                System.exit(1);
+            }
+            String message = scanner.nextLine();
+            clientPrinter.printLine(message);
             if (message.equals("exit"))
                 break;
         }
