@@ -32,6 +32,7 @@ public class ClientReader implements Scannable{
 
             while (selectionKeyIterator.hasNext()){
                 SelectionKey key = selectionKeyIterator.next();
+                selectionKeyIterator.remove();
 
                 if (key.isReadable()){
                     System.out.println("ready");
@@ -45,7 +46,7 @@ public class ClientReader implements Scannable{
                     return new String(byteBuffer.array()).trim();
 
                 }
-                selectionKeyIterator.remove();
+//                selectionKeyIterator.remove();
             }
         }
     }
