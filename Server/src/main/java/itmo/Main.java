@@ -4,44 +4,37 @@ import itmo.io.ServerReader;
 
 import java.io.*;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
+import java.util.Scanner;
 import java.util.Set;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        Selector selector = Selector.open();
-        ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-        serverSocketChannel.bind(new InetSocketAddress("localhost", 8181));
-        serverSocketChannel.configureBlocking(false);
-        int ops = serverSocketChannel.validOps();
-        SelectionKey selectionKey = serverSocketChannel.register(selector, ops, null);
+        ServerSocket serverSocket = new ServerSocket(8181);
+        Socket client = serverSocket.accept();
+        System.out.println("Connection");
+        InputStream in = client.getInputStream();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+        OutputStream out = client.getOutputStream();
+        PrintWriter printWriter = new PrintWriter(out);
+        Scanner sc = new Scanner(System.in);
         while (true){
-            selector.select();
-            Set<SelectionKey> selectionKeys = selector.selectedKeys();
-            Iterator<SelectionKey> selectionKeyIterator = selectionKeys.iterator();
+            /*ByteBuffer bb1 = ByteBuffer.allocate(10000);
+            byte[] array1 = new byte[bb1.limit()];*/
 
-            while (selectionKeyIterator.hasNext()){
-                SelectionKey key = selectionKeyIterator.next();
-                if (key.isAcceptable()){
-                    SocketChannel socketChannel = serverSocketChannel.accept();
-                    System.out.println("Connection!");
-                    socketChannel.configureBlocking(false);
-                    socketChannel.register(selector, SelectionKey.OP_READ);
-                }
-                else if (key.isReadable()){
-                    SocketChannel socketChannel = (SocketChannel) key.channel();
-                    ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-                    socketChannel.read(byteBuffer);
-                    System.out.println(new String(byteBuffer.array()).trim());
-                    socketChannel.write(ByteBuffer.wrap(new String("Response").getBytes()));
-                }
-                selectionKeyIterator.remove();
-            }
+            System.out.println(bufferedReader.readLine());
+            System.out.println("Mes: ");
+            String m = sc.nextLine();
+            out.write(m.getBytes(StandardCharsets.UTF_8));
+            //printWriter.println(m.getBytes(StandardCharsets.UTF_8));
         }
     }
 
