@@ -13,8 +13,9 @@ public class Show implements Command {
      * Поле collection
      * {@link HashTableCollection}
      */
-    private final HashTableCollection<?, ?> collection;
+    private  HashTableCollection<?, ?> collection;
 
+    public Show(){}
     /**
      * Конструктор класса Show
      *
@@ -38,5 +39,13 @@ public class Show implements Command {
         });
 
 
+    }
+
+    public HashTableCollection<?, ?> getCollection() {
+        return collection;
+    }
+
+    public void setCollection(HashTableCollection<?, ?> collection) {
+        this.collection = collection;
     }
 }

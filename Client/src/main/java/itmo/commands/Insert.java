@@ -14,19 +14,20 @@ public class Insert implements Command {
      * Поле collection
      * {@link HashTableCollection}
      */
-    private final HashTableCollection<Integer, Dragon> collection;
+    private HashTableCollection<Integer, Dragon> collection;
 
     /**
      * Поле key
      */
-    private final Integer key;
+    private Integer key;
 
     /**
      * Поле dragon
      * {@link Dragon}
      */
-    private final DragonBuilder dragonBuilder;
+    private  DragonBuilder dragonBuilder;
 
+    public Insert(){}
     /**
      * Конструктор класса Insert
      *
@@ -52,5 +53,29 @@ public class Insert implements Command {
         Dragon dragon = this.dragonBuilder.build();
         collection.put(key, dragon);
 
+    }
+
+    public HashTableCollection<Integer, Dragon> getCollection() {
+        return collection;
+    }
+
+    public void setCollection(HashTableCollection<Integer, Dragon> collection) {
+        this.collection = collection;
+    }
+
+    public Integer getKey() {
+        return key;
+    }
+
+    public void setKey(Integer key) {
+        this.key = key;
+    }
+
+    public DragonBuilder getDragonBuilder() {
+        return dragonBuilder;
+    }
+
+    public void setDragonBuilder(DragonBuilder dragonBuilder) {
+        this.dragonBuilder = dragonBuilder;
     }
 }

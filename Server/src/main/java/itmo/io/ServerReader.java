@@ -1,31 +1,27 @@
 package itmo.io;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 public class ServerReader implements Scannable{
 
-    private SocketChannel socketChannel;
+    private BufferedReader bufferedInputStream;
     private int lines = 0;
 
-    public ServerReader(SocketChannel clientSocket) throws IOException {
-        this.socketChannel = clientSocket;
+    public ServerReader(InputStream in) throws IOException {
+        bufferedInputStream = new BufferedReader(new InputStreamReader(in));
     }
     @Override
     public String scanString() throws IOException {
         ++lines;
-        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-        int size = socketChannel.read(byteBuffer);
-        return new String(byteBuffer.array()).substring(0, size - 1);
+        return bufferedInputStream.readLine();
     }
 
     @Override
     public boolean hasNextLine() throws IOException {
-        return socketChannel.isOpen();
+        return bufferedInputStream.ready();
     }
 
     @Override
@@ -35,6 +31,6 @@ public class ServerReader implements Scannable{
 
     @Override
     public void close() throws IOException {
-        socketChannel.close();
+        bufferedInputStream.close();
     }
 }

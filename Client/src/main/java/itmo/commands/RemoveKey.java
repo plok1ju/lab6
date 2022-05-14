@@ -12,13 +12,14 @@ public class RemoveKey implements Command {
      * Поле collection
      * {@link HashTableCollection}
      */
-    private final HashTableCollection<? extends Integer, ?> collection;
+    private  HashTableCollection<? extends Integer, ?> collection;
 
     /**
      * Поле key
      */
-    private final Integer key;
+    private  Integer key;
 
+    public RemoveKey(){}
     /**
      * Конструктор класса RemoveKey
      *
@@ -40,5 +41,21 @@ public class RemoveKey implements Command {
             throw new CollectionException("Нет такого key");
         }
         collection.remove(key);
+    }
+
+    public HashTableCollection<? extends Integer, ?> getCollection() {
+        return collection;
+    }
+
+    public void setCollection(HashTableCollection<? extends Integer, ?> collection) {
+        this.collection = collection;
+    }
+
+    public Integer getKey() {
+        return key;
+    }
+
+    public void setKey(Integer key) {
+        this.key = key;
     }
 }

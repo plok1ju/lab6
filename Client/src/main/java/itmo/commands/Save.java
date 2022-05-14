@@ -13,8 +13,9 @@ public class Save implements Command {
      * Поле collection
      * {@link HashTableCollection}
      */
-    private final HashTableCollection<Integer, Dragon> collection;
+    private  HashTableCollection<Integer, Dragon> collection;
 
+    public Save(){}
     /**
      * Конструктор класса Save
      *
@@ -33,5 +34,13 @@ public class Save implements Command {
         FileSaver fileSaver = new FileSaver();
         fileSaver.saveInfo(collection);
 
+    }
+
+    public HashTableCollection<Integer, Dragon> getCollection() {
+        return collection;
+    }
+
+    public void setCollection(HashTableCollection<Integer, Dragon> collection) {
+        this.collection = collection;
     }
 }

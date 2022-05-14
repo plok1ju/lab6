@@ -16,8 +16,9 @@ public class PrintDescending implements Command {
      * Поле collection
      * {@link HashTableCollection}
      */
-    private final HashTableCollection<Integer, Dragon> collection;
+    private HashTableCollection<Integer, Dragon> collection;
 
+    public PrintDescending(){}
     /**
      * Конструктор класса PrintDescending
      *
@@ -41,5 +42,13 @@ public class PrintDescending implements Command {
             System.out.println("Ключ элемента " + key + ": " + o);
 
         });
+    }
+
+    public HashTableCollection<Integer, Dragon> getCollection() {
+        return collection;
+    }
+
+    public void setCollection(HashTableCollection<Integer, Dragon> collection) {
+        this.collection = collection;
     }
 }

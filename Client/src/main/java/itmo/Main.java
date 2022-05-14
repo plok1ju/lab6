@@ -19,7 +19,7 @@ import java.util.Scanner;
 public class Main {
 
     private static HashTableCollection<Integer, Dragon> collection = new HashTableCollection<>();
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         Selector selector = Selector.open();
         SocketChannel clientSocketChannel = null;
         try {
@@ -48,21 +48,17 @@ public class Main {
         clientSocketChannel.close();
     }
 
-    private static void getCommand(CommandsManager commandsManager, Scannable scannable, ClientPrinter clientPrinter, ClientReader clientReader) {
+    private static void getCommand(CommandsManager commandsManager, Scannable consoleScan, ClientPrinter clientPrinter, ClientReader clientReader) throws Exception {
         try {
             System.out.println("Введите команду: ");
-            String commandString = scannable.scanString().trim();
 
-            clientPrinter.printLine(commandString);
-            System.out.println(clientReader.scanString());
-
-            /*Command command = commandsManager.getCommand(commandString, scannable, true);
-            command.execute();*/
+            commandsManager.getCommand(consoleScan.scanString(), consoleScan, clientReader, clientPrinter, true);
+//            commandsManager.receiveCommandInfo(commandString, clientReader, clientPrinter);
 
         } catch (Exception e) {
             System.out.println("Что-то пошло не так: " + e.getMessage());
         }
-        getCommand(commandsManager, scannable, clientPrinter, clientReader);
+        getCommand(commandsManager, consoleScan, clientPrinter, clientReader);
     }
 
     private static void sendMessage(SocketChannel clientSocketChannel) throws IOException {

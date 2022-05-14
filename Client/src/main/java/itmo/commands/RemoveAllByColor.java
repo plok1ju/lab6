@@ -15,14 +15,15 @@ public class RemoveAllByColor implements Command {
      * Поле collection
      * {@link HashTableCollection}
      */
-    private final HashTableCollection<?, ? extends Colorable> collection;
+    private  HashTableCollection<?, ? extends Colorable> collection;
 
     /**
      * Поле collection
      * {@link Color}
      */
-    private final Color color;
+    private  Color color;
 
+    public RemoveAllByColor(){}
     /**
      * Конструктор класса RemoveAllByColor
      *
@@ -42,5 +43,21 @@ public class RemoveAllByColor implements Command {
     public void execute() {
         List<?> keys = collection.getKeysAsList();
         keys.stream().filter(key -> collection.get(key).getColor().equals(color)).forEach(collection::remove); // берет поток всех ключей, оставляет только нужные, и пробегается и удаляет
+    }
+
+    public HashTableCollection<?, ? extends Colorable> getCollection() {
+        return collection;
+    }
+
+    public void setCollection(HashTableCollection<?, ? extends Colorable> collection) {
+        this.collection = collection;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 }

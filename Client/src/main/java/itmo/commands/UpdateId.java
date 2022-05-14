@@ -18,19 +18,20 @@ public class UpdateId implements Command {
      * Поле collection
      * {@link HashTableCollection}
      */
-    private final HashTableCollection<Integer, Dragon> collection;
+    private  HashTableCollection<Integer, Dragon> collection;
 
     /**
      * Поле id
      */
-    private final Long id;
+    private  Long id;
 
     /**
      * Поле dragon
      * {@link DragonBuilder}
      */
-    private final DragonBuilder dragonBuilder;
+    private  DragonBuilder dragonBuilder;
 
+    public UpdateId(){}
     /**
      * Конструктор класса UpdateId
      *
@@ -63,5 +64,29 @@ public class UpdateId implements Command {
 
         collection.put(dragonKey, dragon);
 
+    }
+
+    public HashTableCollection<Integer, Dragon> getCollection() {
+        return collection;
+    }
+
+    public void setCollection(HashTableCollection<Integer, Dragon> collection) {
+        this.collection = collection;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public DragonBuilder getDragonBuilder() {
+        return dragonBuilder;
+    }
+
+    public void setDragonBuilder(DragonBuilder dragonBuilder) {
+        this.dragonBuilder = dragonBuilder;
     }
 }

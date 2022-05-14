@@ -1,12 +1,17 @@
 package itmo.manager;
 
-import itmo.model.builders.DragonBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import itmo.collection.HashTableCollection;
 import itmo.commands.*;
 import itmo.exceptions.CollectionException;
+import itmo.io.Printable;
 import itmo.io.Scannable;
 import itmo.model.Color;
 import itmo.model.Dragon;
+import itmo.model.builders.DragonBuilder;
+import itmo.utils.CommandInfo;
+
+import java.io.IOException;
 
 /**
  * Этот класс определяет команду
@@ -18,7 +23,6 @@ public class CommandsManager {
      * {@link HashTableCollection}
      */
     private final HashTableCollection<Integer, Dragon> collection;
-
     /**
      * Конструктор класса CommandsManager
      *
@@ -26,6 +30,16 @@ public class CommandsManager {
      */
     public CommandsManager(HashTableCollection<Integer, Dragon> collection) {
         this.collection = collection;
+    }
+
+    public CommandInfo receiveCommandInfo(String commandName, Scannable clientReader, Printable clientPrinter) throws IOException, CollectionException {
+        clientPrinter.printLine(commandName);
+        String json = clientReader.scanString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        CommandInfo commandInfo = objectMapper.readValue(json, CommandInfo.class);
+        if (!commandInfo.isStatus())
+            throw new CollectionException("Incorrect command");
+        return commandInfo;
     }
 
     /**
@@ -36,7 +50,7 @@ public class CommandsManager {
      * @param isConsole   - значение поля isConsole
      * @return - введенная команда
      */
-    public Command getCommand(String commandLine, Scannable scannable, boolean isConsole) throws Exception {
+    public void getCommand(String commandLine, Scannable scannable, Scannable clientReader, Printable clientPrinter, boolean isConsole) throws Exception {
         try {
             String[] arrayLine = commandLine.trim().replaceAll("\\s+", " ").split(" ");
 
@@ -45,137 +59,185 @@ public class CommandsManager {
 
             }
             String command = arrayLine[0];
-            switch (command) {
+            CommandInfo commandInfo = receiveCommandInfo(commandLine, clientReader, clientPrinter);
+            ObjectMapper objectMapper = new ObjectMapper();
+            switch (commandInfo.getName()) {
                 case "clear": {
-                    if (arrayLine.length > 1) {
+                    if (arrayLine.length > commandInfo.getSimpleArguments() + 1) {
                         throw new CollectionException("Команда введена некорректно");
                     }
-                    return new Clear(collection);
+                    commandInfo.setCommand(new Clear(collection));
+                    String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(commandInfo);
+                    clientPrinter.printLine(json);
+                    break;
                 }
 
                 case "show": {
-                    if (arrayLine.length > 1) {
+                    if (arrayLine.length > commandInfo.getSimpleArguments() + 1) {
                         throw new CollectionException("Команда введена некорректно");
                     }
-                    return new Show(collection);
+                    commandInfo.setCommand(new Show(collection));
+                    String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(commandInfo);
+                    clientPrinter.printLine(json);
+                    break;
                 }
 
                 case "info": {
-                    if (arrayLine.length > 1) {
+                    if (arrayLine.length > commandInfo.getSimpleArguments() + 1) {
                         throw new CollectionException("Команда введена некорректно");
                     }
-                    return new Info(collection);
-
+                    commandInfo.setCommand(new Info(collection));
+                    String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(commandInfo);
+                    //clientPrinter.printLine(json);
+                    System.out.println(json);
+                    break;
                 }
 
                 case "insert": {
 
-                    if (arrayLine.length < 2) {
+                    if (arrayLine.length < commandInfo.getSimpleArguments() + 1) {
                         throw new CollectionException("Введены не все поля");
                     }
                     Integer key = Integer.parseInt(arrayLine[1]);
                     DragonBuilder dragonBuilder = new DragonBuilder(isConsole, scannable);
-                    return new Insert(collection, key, dragonBuilder);
+                    commandInfo.setCommand(new Insert(collection, key, dragonBuilder));
+                    String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(commandInfo);
+                    clientPrinter.printLine(json);
                 }
 
                 case "exit": {
-                    if (arrayLine.length > 1) {
+                    if (arrayLine.length > commandInfo.getSimpleArguments() + 1) {
                         throw new CollectionException("Команда введена некорректно");
                     }
-                    return new Exit();
-
+                    commandInfo.setCommand(new Exit());
+                    String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(commandInfo);
+                    clientPrinter.printLine(json);
+                    break;
                 }
 
                 case "help": {
-                    if (arrayLine.length > 1) {
+                    if (arrayLine.length > commandInfo.getSimpleArguments() + 1) {
                         throw new CollectionException("Команда введена некорректно");
                     }
-                    return new Help();
+                    commandInfo.setCommand(new Help());
+                    String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(commandInfo);
+                    clientPrinter.printLine(json);
+                    break;
                 }
 
                 case "print_descending": {
-                    if (arrayLine.length > 1) {
+                    if (arrayLine.length > commandInfo.getSimpleArguments() + 1) {
                         throw new CollectionException("Команда введена некорректно");
                     }
-                    return new PrintDescending(collection);
+                    commandInfo.setCommand(new PrintDescending(collection));
+                    String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(commandInfo);
+                    clientPrinter.printLine(json);
+                    break;
                 }
 
                 case "remove_all_by_color": {
 
-                    if (arrayLine.length < 2) {
+                    if (arrayLine.length < commandInfo.getSimpleArguments() + 1) {
                         throw new CollectionException("Введены не все поля");
                     }
                     Color color = Color.parse(arrayLine[1]);
-                    return new RemoveAllByColor(collection, color);
+                    commandInfo.setCommand(new RemoveAllByColor(collection, color));
+                    String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(commandInfo);
+                    clientPrinter.printLine(json);
+                    break;
                 }
 
                 case "remove_greater_key": {
 
-                    if (arrayLine.length < 2) {
+                    if (arrayLine.length < commandInfo.getSimpleArguments() + 1) {
                         throw new CollectionException("Введены не все поля");
                     }
                     Integer key = Integer.parseInt(arrayLine[1]);
-                    return new RemoveGreaterKey(collection, key);
+                    commandInfo.setCommand(new RemoveGreaterKey(collection, key));
+                    String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(commandInfo);
+                    clientPrinter.printLine(json);
+                    break;
                 }
 
                 case "remove_key": {
 
-                    if (arrayLine.length < 2) {
+                    if (arrayLine.length < commandInfo.getSimpleArguments() + 1) {
                         throw new CollectionException("Введены не все поля");
                     }
                     Integer key = Integer.parseInt(arrayLine[1]);
-                    return new RemoveKey(collection, key);
+                    commandInfo.setCommand(new RemoveKey(collection, key));
+                    String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(commandInfo);
+                    clientPrinter.printLine(json);
+                    break;
                 }
 
                 case "save": {
-                    if (arrayLine.length > 1) {
+                    if (arrayLine.length > commandInfo.getSimpleArguments() + 1) {
                         throw new CollectionException("Команда введена некорректно");
                     }
-                    return new Save(collection);
+                    commandInfo.setCommand(new Save(collection));
+                    String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(commandInfo);
+                    clientPrinter.printLine(json);
+                    break;
                 }
 
                 case "sum_of_age": {
-                    if (arrayLine.length > 1) {
+                    if (arrayLine.length > commandInfo.getSimpleArguments() + 1) {
                         throw new CollectionException("Команда введена некорректно");
                     }
-                    return new SumOfAge(collection);
+                    commandInfo.setCommand(new SumOfAge(collection));
+                    String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(commandInfo);
+                    clientPrinter.printLine(json);
+                    break;
                 }
 
 
                 case "remove_lower": {
-                    if (arrayLine.length > 1) {
+                    if (arrayLine.length > commandInfo.getSimpleArguments() + 1) {
                         throw new CollectionException("Команда введена некорректно");
                     }
                     DragonBuilder dragonBuilder = new DragonBuilder(isConsole, scannable);
-                    return new RemoveLower(collection, dragonBuilder);
+                    commandInfo.setCommand(new RemoveLower(collection, dragonBuilder));
+                    String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(commandInfo);
+                    clientPrinter.printLine(json);
+                    break;
                 }
 
                 case "replace_if_lower": {
 
-                    if (arrayLine.length < 2) {
+                    if (arrayLine.length < commandInfo.getSimpleArguments() + 1) {
                         throw new CollectionException("Введены не все поля");
                     }
                     DragonBuilder dragonBuilder = new DragonBuilder(isConsole, scannable);
                     Integer key = Integer.parseInt(arrayLine[1]);
-                    return new ReplaceIfLower(collection, key, dragonBuilder);
+                    commandInfo.setCommand(new ReplaceIfLower(collection, key, dragonBuilder));
+                    String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(commandInfo);
+                    clientPrinter.printLine(json);
+                    break;
                 }
 
                 case "update": {
-                    if (arrayLine.length < 2) {
+                    if (arrayLine.length < commandInfo.getSimpleArguments() + 1) {
                         throw new CollectionException("Введены не все поля");
                     }
                     DragonBuilder dragonBuilder = new DragonBuilder(isConsole, scannable);
                     Long id = Long.parseLong(arrayLine[1]);
-                    return new UpdateId(collection, id, dragonBuilder);
+                    commandInfo.setCommand(new UpdateId(collection, id, dragonBuilder));
+                    String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(commandInfo);
+                    clientPrinter.printLine(json);
+                    break;
 
                 }
                 case "execute_script": {
 
-                    if (arrayLine.length < 2) {
+                    if (arrayLine.length < commandInfo.getSimpleArguments() + 1) {
                         throw new CollectionException("Введены не все поля");
                     }
                     String nameFile = arrayLine[1];
-                    return new ExecuteScript(nameFile, collection);
+                    commandInfo.setCommand(new ExecuteScript(nameFile, collection));
+                    String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(commandInfo);
+                    clientPrinter.printLine(json);
+                    break;
                 }
                 default: {
                     throw new CollectionException("Такой команды нет :(");

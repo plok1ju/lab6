@@ -11,8 +11,9 @@ public class Info implements Command {
      * Поле collection
      * {@link HashTableCollection}
      */
-    private final HashTableCollection<?, ?> collection;
+    private HashTableCollection<?, ?> collection;
 
+    public Info(){}
     /**
      * Конструктор класса Info
      *
@@ -31,5 +32,14 @@ public class Info implements Command {
         System.out.println("Дата создания коллекции: " + collection.getDateTime());
         System.out.println("Количество элементов: " + collection.size());
 
+    }
+
+
+    public HashTableCollection<?, ?> getCollection() {
+        return collection;
+    }
+
+    public void setCollection(HashTableCollection<?, ?> collection) {
+        this.collection = collection;
     }
 }

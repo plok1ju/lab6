@@ -11,7 +11,7 @@ public class Info implements Command {
      * Поле collection
      * {@link HashTableCollection}
      */
-    private final HashTableCollection<?, ?> collection;
+    private HashTableCollection<?, ?> collection;
 
     /**
      * Конструктор класса Info

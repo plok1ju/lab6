@@ -14,13 +14,14 @@ public class RemoveGreaterKey implements Command {
      * Поле collection
      * {@link HashTableCollection}
      */
-    private final HashTableCollection<? extends Integer, ?> collection;
+    private  HashTableCollection<? extends Integer, ?> collection;
 
     /**
      * Поле key
      */
-    private final Integer key;
+    private  Integer key;
 
+    public RemoveGreaterKey(){}
     /**
      * Конструктор класса RemoveGreaterKey
      *
@@ -41,5 +42,21 @@ public class RemoveGreaterKey implements Command {
         List<? extends Integer> keys = collection.getKeysAsList();
         keys.stream().filter(keyInKeys -> keyInKeys.compareTo(this.key) > 0).forEach(collection::remove);
 
+    }
+
+    public HashTableCollection<? extends Integer, ?> getCollection() {
+        return collection;
+    }
+
+    public void setCollection(HashTableCollection<? extends Integer, ?> collection) {
+        this.collection = collection;
+    }
+
+    public Integer getKey() {
+        return key;
+    }
+
+    public void setKey(Integer key) {
+        this.key = key;
     }
 }

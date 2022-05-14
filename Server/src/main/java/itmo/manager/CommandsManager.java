@@ -1,12 +1,17 @@
 package itmo.manager;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import itmo.collection.HashTableCollection;
 import itmo.commands.*;
 import itmo.exceptions.CollectionException;
+import itmo.io.Printable;
 import itmo.io.Scannable;
 import itmo.model.Color;
 import itmo.model.Dragon;
 import itmo.model.builders.DragonBuilder;
+import itmo.utils.CommandInfo;
+
+import java.io.IOException;
 
 /**
  * Этот класс определяет команду
@@ -28,6 +33,91 @@ public class CommandsManager {
         this.collection = collection;
     }
 
+    public void sendCommandInfo(Scannable serverReader, Printable serverPrinter) throws IOException, CollectionException {
+        String commandName = serverReader.scanString();
+        CommandInfo commandInfo = getCommandInfo(commandName);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(commandInfo);
+        serverPrinter.printLine(json);
+    }
+    public CommandInfo getCommandInfo(String commandName) throws CollectionException {
+        switch (commandName) {
+            case "clear": {
+                return new CommandInfo(0, 0, commandName);
+            }
+
+            case "show": {
+                return new CommandInfo(0, 0, commandName);
+            }
+
+            case "info": {
+                return new CommandInfo(0, 0, commandName);
+
+            }
+
+            case "insert": {
+                return new CommandInfo(1, 1, commandName);
+            }
+
+            case "exit": {
+                return new CommandInfo(0, 0, commandName);
+            }
+
+            case "help": {
+                return new CommandInfo(0, 0, commandName);
+            }
+
+            case "print_descending": {
+                return new CommandInfo(0, 0, commandName);
+            }
+
+            case "remove_all_by_color": {
+                return new CommandInfo(1, 0, commandName);
+            }
+
+            case "remove_greater_key": {
+                return new CommandInfo(1, 0, commandName);
+            }
+
+            case "remove_key": {
+
+                return new CommandInfo(1, 0, commandName);
+            }
+
+            case "save": {
+                return new CommandInfo(0, 0, commandName);
+            }
+
+            case "sum_of_age": {
+                return new CommandInfo(0, 0, commandName);
+            }
+
+
+            case "remove_lower": {
+                return new CommandInfo(0, 1, commandName);
+            }
+
+            case "replace_if_lower": {
+
+                return new CommandInfo(1, 1, commandName);
+            }
+
+            case "update": {
+                return new CommandInfo(1, 1, commandName);
+
+            }
+            case "execute_script": {
+
+                return new CommandInfo(1, 0, commandName);
+            }
+            default: {
+                CommandInfo commandInfo = new CommandInfo(0,0, null);
+                commandInfo.setStatus(false);
+                return commandInfo;
+            }
+
+        }
+    }
     /**
      * Метод определяющий команду
      *

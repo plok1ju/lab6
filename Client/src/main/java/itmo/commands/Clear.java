@@ -11,8 +11,9 @@ public class Clear implements Command {
      * Поле collection
      * {@link HashTableCollection}
      */
-    private final HashTableCollection<?, ?> collection; // ? - все равно какой тип
+    private HashTableCollection<?, ?> collection; // ? - все равно какой тип
 
+    public Clear(){}
     /**
      * Конструктор класса Clear
      *
@@ -33,5 +34,11 @@ public class Clear implements Command {
 
     }
 
+    public HashTableCollection<?, ?> getCollection() {
+        return collection;
+    }
 
+    public void setCollection(HashTableCollection<?, ?> collection) {
+        this.collection = collection;
+    }
 }

@@ -14,13 +14,14 @@ public class SumOfAge implements Command {
      * Поле collection
      * {@link HashTableCollection}
      */
-    private final HashTableCollection<?, ? extends Ageable> collection;
+    private  HashTableCollection<?, ? extends Ageable> collection;
 
     /**
      * Поле sumAge
      */
     private Integer sumAge = 0;
 
+    public SumOfAge(){}
     /**
      * Конструктор класса SumOfAge
      *
@@ -40,5 +41,21 @@ public class SumOfAge implements Command {
         keys.forEach(key -> sumAge += (collection.get(key).getAge() == null ? 0 : collection.get(key).getAge()));
         System.out.println("Сумма возрастов: " + sumAge);
 
+    }
+
+    public HashTableCollection<?, ? extends Ageable> getCollection() {
+        return collection;
+    }
+
+    public void setCollection(HashTableCollection<?, ? extends Ageable> collection) {
+        this.collection = collection;
+    }
+
+    public Integer getSumAge() {
+        return sumAge;
+    }
+
+    public void setSumAge(Integer sumAge) {
+        this.sumAge = sumAge;
     }
 }

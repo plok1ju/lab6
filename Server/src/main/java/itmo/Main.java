@@ -1,56 +1,41 @@
 package itmo;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import itmo.collection.HashTableCollection;
+import itmo.commands.Command;
+import itmo.commands.Info;
+import itmo.exceptions.CollectionException;
+import itmo.io.Scannable;
 import itmo.io.ServerPrinter;
 import itmo.io.ServerReader;
+import itmo.manager.CommandsManager;
+import itmo.model.Dragon;
+import itmo.utils.CommandInfo;
 
-import java.io.*;
-import java.net.InetSocketAddress;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
-import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
 import java.util.Scanner;
-import java.util.Set;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, CollectionException {
+//        Info command = new Info(null);
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(command));
+
         ServerSocket serverSocket = new ServerSocket(8181);
         Socket client = serverSocket.accept();
         System.out.println("Connection");
-        InputStream in = client.getInputStream();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-        OutputStream out = client.getOutputStream();
-        PrintWriter printWriter = new PrintWriter(out);
         Scanner sc = new Scanner(System.in);
+        ServerReader serverReader = new ServerReader(client.getInputStream());
+        ServerPrinter serverPrinter = new ServerPrinter(client.getOutputStream());
+        CommandsManager commandsManager = new CommandsManager(null);
         while (true){
-            /*ByteBuffer bb1 = ByteBuffer.allocate(10000);
-            byte[] array1 = new byte[bb1.limit()];*/
-
-            System.out.println(bufferedReader.readLine());
-            System.out.println("Mes: ");
-            String m = sc.nextLine();
-            out.write(m.getBytes(StandardCharsets.UTF_8));
-            //printWriter.println(m.getBytes(StandardCharsets.UTF_8));
+//            System.out.println(serverReader.scanString());
+//            System.out.println("Mes: ");
+//            String m = sc.nextLine();
+//            serverPrinter.printLine(m);
+            commandsManager.sendCommandInfo(serverReader, serverPrinter);
         }
-    }
-
-    private static void waitForInput(SocketChannel clientSocket) throws IOException {
-        ServerReader serverReader = new ServerReader(clientSocket);
-        ServerPrinter serverPrinter = new ServerPrinter(clientSocket);
-        //clientSocket.configureBlocking(false);
-        while (true) {
-            if (serverReader.hasNextLine()) {
-                String message = serverReader.scanString();
-                System.out.println(message);
-                serverPrinter.printLine(message.concat("_from_server"));
-                if (message.equals("exit"))
-                    break;
-            }
-        }
-        serverReader.close();
     }
 }

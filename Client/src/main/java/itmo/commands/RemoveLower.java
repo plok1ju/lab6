@@ -15,14 +15,15 @@ public class RemoveLower implements Command {
      * Поле collection
      * {@link HashTableCollection}
      */
-    private final HashTableCollection<Integer, Dragon> collection;
+    private  HashTableCollection<Integer, Dragon> collection;
 
     /**
      * Поле dragonBuilder
      * {@link DragonBuilder}
      */
-    private final DragonBuilder dragonBuilder;
+    private  DragonBuilder dragonBuilder;
 
+    public RemoveLower(){}
     /**
      * Конструктор класса RemoveLower
      *
@@ -44,5 +45,21 @@ public class RemoveLower implements Command {
         Dragon dragon = dragonBuilder.build();
         keys.stream().filter(key -> dragon.compareTo(collection.get(key)) > 0).forEach(collection::remove);
 
+    }
+
+    public HashTableCollection<Integer, Dragon> getCollection() {
+        return collection;
+    }
+
+    public void setCollection(HashTableCollection<Integer, Dragon> collection) {
+        this.collection = collection;
+    }
+
+    public DragonBuilder getDragonBuilder() {
+        return dragonBuilder;
+    }
+
+    public void setDragonBuilder(DragonBuilder dragonBuilder) {
+        this.dragonBuilder = dragonBuilder;
     }
 }
