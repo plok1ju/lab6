@@ -1,6 +1,8 @@
 package itmo.commands;
 
 import itmo.collection.HashTableCollection;
+import itmo.io.Printable;
+import itmo.io.Scannable;
 import itmo.model.Dragon;
 import itmo.model.builders.DragonBuilder;
 
@@ -26,6 +28,8 @@ public class ReplaceIfLower implements Command {
      * {@link DragonBuilder}
      */
     private final DragonBuilder dragonBuilder;
+    private final Scannable scannable;
+    private final Printable printable;
 
     /**
      * Конструктор класса ReplaceIfLowe
@@ -33,11 +37,15 @@ public class ReplaceIfLower implements Command {
      * @param collection    - Поле collection
      * @param key           - Поле key
      * @param dragonBuilder - Поле dragonBuilder
+     * @param scannable
+     * @param printable
      */
-    public ReplaceIfLower(HashTableCollection<Integer, Dragon> collection, Integer key, DragonBuilder dragonBuilder) {
+    public ReplaceIfLower(Integer key, DragonBuilder dragonBuilder, HashTableCollection<Integer, Dragon> collection, Scannable scannable, Printable printable) {
         this.collection = collection;
         this.key = key;
         this.dragonBuilder = dragonBuilder;
+        this.scannable = scannable;
+        this.printable = printable;
     }
 
 
@@ -47,7 +55,7 @@ public class ReplaceIfLower implements Command {
      */
     @Override
     public void execute() throws Exception {
-        Dragon dragon = dragonBuilder.build();
+        Dragon dragon = dragonBuilder.build(scannable, printable);
         if (dragon.compareTo(collection.get(key)) < 0) {
             collection.remove(key);
             collection.put(key, dragon);

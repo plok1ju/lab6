@@ -29,7 +29,7 @@ public class RemoveAllByColor implements Command {
      * @param collection - Поле collection
      * @param color      - Поле color
      */
-    public RemoveAllByColor(HashTableCollection<?, ? extends Colorable> collection, Color color) {
+    public RemoveAllByColor(Color color, HashTableCollection<?, ? extends Colorable> collection) {
         this.collection = collection;
         this.color = color;
     }
@@ -43,4 +43,6 @@ public class RemoveAllByColor implements Command {
         List<?> keys = collection.getKeysAsList();
         keys.stream().filter(key -> collection.get(key).getColor().equals(color)).forEach(collection::remove); // берет поток всех ключей, оставляет только нужные, и пробегается и удаляет
     }
+
+
 }

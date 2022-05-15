@@ -1,8 +1,10 @@
 package itmo.commands;
 
 import itmo.collection.HashTableCollection;
+import itmo.io.Printable;
 import itmo.model.Ageable;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -15,6 +17,7 @@ public class SumOfAge implements Command {
      * {@link HashTableCollection}
      */
     private final HashTableCollection<?, ? extends Ageable> collection;
+    private final Printable printable;
 
     /**
      * Поле sumAge
@@ -25,9 +28,11 @@ public class SumOfAge implements Command {
      * Конструктор класса SumOfAge
      *
      * @param collection - Поле collection
+     * @param printable
      */
-    public SumOfAge(HashTableCollection<?, ? extends Ageable> collection) {
+    public SumOfAge(HashTableCollection<?, ? extends Ageable> collection, Printable printable) {
         this.collection = collection;
+        this.printable = printable;
     }
 
     /**
@@ -35,10 +40,11 @@ public class SumOfAge implements Command {
      * Вывод суммы полей age всех элементов коллекции
      */
     @Override
-    public void execute() {
+    public void execute() throws IOException {
         List<?> keys = collection.getKeysAsList();
         keys.forEach(key -> sumAge += (collection.get(key).getAge() == null ? 0 : collection.get(key).getAge()));
-        System.out.println("Сумма возрастов: " + sumAge);
+        printable.printLine("/noresponse//Сумма возрастов: " + sumAge);
 
     }
+
 }

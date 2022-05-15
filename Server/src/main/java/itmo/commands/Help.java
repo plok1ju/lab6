@@ -1,14 +1,18 @@
 package itmo.commands;
 
+import itmo.io.Printable;
+
+import java.io.IOException;
+
 /**
  * Класс отвечает за выведение информации о доступных командах
  */
 public class Help implements Command {
 
-    /**
-     * Пустой конструктор класса Help
-     */
-    public Help() {
+    private final Printable printable;
+
+    public Help(Printable printable) {
+        this.printable = printable;
     }
 
     /**
@@ -16,8 +20,8 @@ public class Help implements Command {
      * Вывод возможных команд
      */
     @Override
-    public void execute() {
-        System.out.println("help : вывести справку по доступным командам\n" +
+    public void execute() throws IOException {
+        printable.printLine("/noresponse/help : вывести справку по доступным командам\n" +
                 "info : вывести в стандартный поток вывода информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)\n" +
                 "show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении\n" +
                 "insert key {element}: добавить новый элемент с заданным ключом\n" +

@@ -1,6 +1,9 @@
 package itmo.commands;
 
 import itmo.collection.HashTableCollection;
+import itmo.io.Printable;
+
+import java.io.IOException;
 
 /**
  * Класс отвечает за вывод информации о коллекции
@@ -11,25 +14,28 @@ public class Info implements Command {
      * Поле collection
      * {@link HashTableCollection}
      */
-    private HashTableCollection<?, ?> collection;
+    private final HashTableCollection<?, ?> collection;
+    private final Printable printable;
+
 
     /**
      * Конструктор класса Info
      *
      * @param collection - Поле collection
+     * @param printable
      */
-    public Info(HashTableCollection<?, ?> collection) {
+    public Info(HashTableCollection<?, ?> collection, Printable printable) {
         this.collection = collection;
+        this.printable = printable;
     }
 
     /**
      * Переопределение метода execute
      * Вывод информации о коллекции
      */
-    public void execute() {
-        System.out.println("Тип элемента коллекции: " + collection.getClass().getSimpleName()); // getSimpleName() имя класса в простом представлении
-        System.out.println("Дата создания коллекции: " + collection.getDateTime());
-        System.out.println("Количество элементов: " + collection.size());
-
+    public void execute() throws IOException {
+        printable.printLine("/noresponse/Тип элемента коллекции: " + collection.getClass().getSimpleName() + "\n"
+                + "Дата создания коллекции: " + collection.getDateTime() + "\n"
+                + "Количество элементов: " + collection.size());
     }
 }

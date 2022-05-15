@@ -1,6 +1,9 @@
 package itmo.commands;
 
 import itmo.collection.HashTableCollection;
+import itmo.io.Printable;
+
+import java.io.IOException;
 
 /**
  * Класс отвечает за очищение коллекции
@@ -12,14 +15,17 @@ public class Clear implements Command {
      * {@link HashTableCollection}
      */
     private final HashTableCollection<?, ?> collection; // ? - все равно какой тип
+    private final Printable printable;
 
     /**
      * Конструктор класса Clear
      *
      * @param collection - Поле collection
+     * @param printable
      */
-    public Clear(HashTableCollection<?, ?> collection) {
+    public Clear(HashTableCollection<?, ?> collection, Printable printable) {
         this.collection = collection;
+        this.printable = printable;
     }
 
     /**
@@ -27,11 +33,9 @@ public class Clear implements Command {
      * Очищение коллекции
      */
     @Override
-    public void execute() {
+    public void execute() throws IOException {
         collection.clear();
-        System.out.println("Коллекция очищена");
+        printable.printLine("/noresponse/Коллекция очищена");
 
     }
-
-
 }

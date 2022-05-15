@@ -39,7 +39,7 @@ public class ClientReader implements Scannable{
                     SocketChannel socketChannel = (SocketChannel) key.channel();
 
                     ++lines;
-                    ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+                    ByteBuffer byteBuffer = ByteBuffer.allocate(10000);
                     int size = socketChannel.read(byteBuffer);
                     if (size == -1 || size == 0)
                         return "";
@@ -53,7 +53,7 @@ public class ClientReader implements Scannable{
 
     @Override
     public boolean hasNextLine() throws IOException {
-        return true;
+        return selector.keys().stream().anyMatch(SelectionKey::isReadable);
     }
 
     @Override

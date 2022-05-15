@@ -26,6 +26,9 @@ public class ReaderXml {
         FileManager fileManager = new FileManager();
         File file = fileManager.getFile();
 
+        if (!file.exists()){
+            throw new CollectionException("Файла " + file.getName() + " не существует");
+        }
         if (!file.canRead()) {
             throw new CollectionException("Похоже файл закрыт для чтения");
         }

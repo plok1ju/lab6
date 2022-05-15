@@ -26,6 +26,9 @@ public class FileSaver {
 
         FileManager fileManager = new FileManager();
         File file = fileManager.getFile();
+        if (!file.exists()){
+            file.createNewFile();
+        }
         if (!file.canWrite()) {
             throw new CollectionException("Похоже файл закрыт для записи");
         }

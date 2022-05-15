@@ -1,15 +1,12 @@
 package itmo;
 
-import itmo.collection.HashTableCollection;
 import itmo.io.ClientPrinter;
 import itmo.io.ClientReader;
 import itmo.io.ConsoleScan;
 import itmo.io.Scannable;
 import itmo.manager.CommandsManager;
-import itmo.manager.file.ReaderXml;
-import itmo.model.Dragon;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -17,8 +14,6 @@ import java.nio.channels.SocketChannel;
 import java.util.Scanner;
 
 public class Main {
-
-    private static HashTableCollection<Integer, Dragon> collection = new HashTableCollection<>();
     public static void main(String[] args) throws Exception {
         Selector selector = Selector.open();
         SocketChannel clientSocketChannel = null;
@@ -32,15 +27,8 @@ public class Main {
         int ops = clientSocketChannel.validOps();
         SelectionKey selectionKey = clientSocketChannel.register(selector, ops, null);
 
-        ReaderXml readerXml = new ReaderXml();
-        try {
-            collection = readerXml.returnCollect();
-        } catch (Exception e) {
-            System.out.println("Что-то пошло не так: " + e.getMessage());
-
-        }
         Scannable scannable = new ConsoleScan();
-        CommandsManager commandsManager = new CommandsManager(collection);
+        CommandsManager commandsManager = new CommandsManager();
         ClientPrinter clientPrinter = new ClientPrinter(clientSocketChannel);
         ClientReader clientReader = new ClientReader(clientSocketChannel);
         getCommand(commandsManager, scannable, clientPrinter, clientReader);

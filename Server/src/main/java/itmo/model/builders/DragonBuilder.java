@@ -1,5 +1,8 @@
 package itmo.model.builders;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import itmo.commands.PrintDescending;
+import itmo.io.Printable;
 import itmo.io.Scannable;
 import itmo.manager.IdGenerator;
 import itmo.model.Color;
@@ -19,23 +22,30 @@ public class DragonBuilder {
      * Поле класса Dragon
      * {@link Dragon}
      */
-    private final Dragon dragon;
+    @JsonIgnore
+    private Dragon dragon;
 
     /**
      * Поле определяющее ввод из консоли
      */
-    private final boolean isConsole;
+    private boolean isConsole;
+    public boolean isConsole() {
+        return isConsole;
+    }
 
-    private final Scannable scannable;
+    public void setConsole(boolean console) {
+        isConsole = console;
+    }
 
+    public DragonBuilder(){
+        this.dragon = new Dragon();
+    }
     /**
      * Конструктор класса DragonBuilder
      *
      * @param isConsole - значение поля isConsole
-     * @param scannable - значение поля scannable
      */
-    public DragonBuilder(boolean isConsole, Scannable scannable) {
-        this.scannable = scannable;
+    public DragonBuilder(boolean isConsole) {
         this.isConsole = isConsole;
         dragon = new Dragon();
     }
@@ -45,16 +55,16 @@ public class DragonBuilder {
      *
      * @return dragon   - значение объекта dragon
      */
-    public Dragon build() throws Exception {
+    public Dragon build(Scannable scannable, Printable printable) throws Exception {
         this.buildId();
-        this.buildName(scannable);
-        this.buildAge(scannable);
-        this.buildCoordinates(scannable);
+        this.buildName(scannable, printable);
+        this.buildAge(scannable, printable);
+        this.buildCoordinates(scannable, printable);
         this.setCreationDate();
-        this.buildDescription(scannable);
-        this.buildColor(scannable);
-        this.buildCharacter(scannable);
-        this.buildPerson(scannable);
+        this.buildDescription(scannable, printable);
+        this.buildColor(scannable, printable);
+        this.buildCharacter(scannable, printable);
+        this.buildPerson(scannable, printable);
 
         return this.dragon;
 
@@ -72,16 +82,16 @@ public class DragonBuilder {
      *
      * @param scannable - значение поля scannable
      */
-    private void buildName(Scannable scannable) throws Exception {
+    private void buildName(Scannable scannable, Printable printable) throws Exception {
         if (isConsole) {
             try {
-                System.out.println("Введите имя дракона:");
+                printable.printLine("Введите имя дракона:");
                 String nameDragon = scannable.scanString();
                 dragon.setName(nameDragon);
 
             } catch (Exception e) {
-                System.out.println("Что-то пошло не так: " + e.getMessage());
-                this.buildName(scannable);
+                printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
+                this.buildName(scannable, printable);
             }
         } else {
             String nameDragon = scannable.scanString();
@@ -94,10 +104,10 @@ public class DragonBuilder {
      *
      * @param scannable - значение поля scannable
      */
-    private void buildAge(Scannable scannable) throws Exception {
+    private void buildAge(Scannable scannable, Printable printable) throws Exception {
         if (isConsole) {
             try {
-                System.out.println("Введите возраст дракона:");
+                printable.printLine("Введите возраст дракона:");
                 String ageString = scannable.scanString();
                 Integer age;
                 if (ageString.equals("")) {
@@ -107,8 +117,8 @@ public class DragonBuilder {
                 }
                 dragon.setAge(age);
             } catch (Exception e) {
-                System.out.println("Что-то пошло не так: " + e.getMessage());
-                this.buildAge(scannable);
+                printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
+                this.buildAge(scannable, printable);
 
             }
         } else {
@@ -128,10 +138,10 @@ public class DragonBuilder {
      *
      * @param scannable - значение поля scannable
      */
-    private void buildDescription(Scannable scannable) throws IOException {
+    private void buildDescription(Scannable scannable, Printable printable) throws IOException {
         if (isConsole) {
             try {
-                System.out.println("Введите описание дракона:");
+                printable.printLine("Введите описание дракона:");
                 String description = scannable.scanString();
                 if (description.equals("")) {
                     description = null;
@@ -139,8 +149,8 @@ public class DragonBuilder {
                 dragon.setDescription(description);
 
             } catch (Exception e) {
-                System.out.println("Что-то пошло не так: " + e.getMessage());
-                this.buildDescription(scannable);
+                printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
+                this.buildDescription(scannable, printable);
 
             }
         } else {
@@ -157,16 +167,15 @@ public class DragonBuilder {
      *
      * @param scannable - значение поля scannable
      */
-    private void buildColor(Scannable scannable) throws Exception {
+    private void buildColor(Scannable scannable, Printable printable) throws Exception {
         if (isConsole) {
             try {
-                System.out.println("Выберете одно из предложенных значений цвета для дракона");
-                System.out.println(Color.getValues());
+                printable.printLine("Выберете одно из предложенных значений цвета для дракона " + Color.getValues());
                 Color color = Color.parse(scannable.scanString());
                 dragon.setColor(color);
             } catch (Exception e) {
-                System.out.println("Что-то пошло не так: " + e.getMessage());
-                this.buildColor(scannable);
+                printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
+                this.buildColor(scannable, printable);
             }
         } else {
             Color color = Color.parse(scannable.scanString());
@@ -179,16 +188,15 @@ public class DragonBuilder {
      *
      * @param scannable - значение поля scannable
      */
-    private void buildCharacter(Scannable scannable) throws Exception {
+    private void buildCharacter(Scannable scannable, Printable printable) throws Exception {
         if (isConsole) {
             try {
-                System.out.println("Выберете одно из предложенных значений характера дракона");
-                System.out.println(DragonCharacter.getValues());
+                printable.printLine("Выберете одно из предложенных значений характера дракона " + DragonCharacter.getValues());
                 DragonCharacter character = DragonCharacter.parse(scannable.scanString());
                 dragon.setCharacter(character);
             } catch (Exception e) {
-                System.out.println("Что-то пошло не так: " + e.getMessage());
-                this.buildCharacter(scannable);
+                printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
+                this.buildCharacter(scannable, printable);
             }
         } else {
             DragonCharacter character = DragonCharacter.parse(scannable.scanString());
@@ -201,9 +209,9 @@ public class DragonBuilder {
      *
      * @param scannable - значение поля scannable
      */
-    private void buildCoordinates(Scannable scannable) throws Exception {
+    private void buildCoordinates(Scannable scannable, Printable printable) throws Exception {
         CoordinatesBuilder coordinatesBuilder = new CoordinatesBuilder(isConsole);
-        dragon.setCoordinates(coordinatesBuilder.build(scannable));
+        dragon.setCoordinates(coordinatesBuilder.build(scannable, printable));
 
     }
 
@@ -221,25 +229,25 @@ public class DragonBuilder {
      *
      * @param scannable - значение поля scannable
      */
-    private void buildPerson(Scannable scannable) throws Exception {
+    private void buildPerson(Scannable scannable, Printable printable) throws Exception {
         if (isConsole) {
-            System.out.println("Задать значение убийцы дракона? Введите 'yes' или 'no'");
+            printable.printLine("Задать значение убийцы дракона? Введите 'yes' или 'no'");
             String answer = scannable.scanString().toUpperCase(Locale.ROOT);
             if (answer.contains("YES")) {
                 PersonBuilder personBuilder = new PersonBuilder(isConsole);
-                dragon.setKiller(personBuilder.build(scannable));
+                dragon.setKiller(personBuilder.build(scannable, printable));
                 return;
             }
             if (answer.contains("NO")) {
                 dragon.setKiller(null);
                 return;
             }
-            this.buildPerson(scannable);
+            this.buildPerson(scannable, printable);
 
         } else {
             try {
                 PersonBuilder personBuilder = new PersonBuilder(isConsole);
-                dragon.setKiller(personBuilder.build(scannable));
+                dragon.setKiller(personBuilder.build(scannable, printable));
             } catch (Exception e) {
                 dragon.setKiller(null);
             }

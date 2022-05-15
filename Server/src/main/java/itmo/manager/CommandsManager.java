@@ -1,17 +1,20 @@
 package itmo.manager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import itmo.collection.HashTableCollection;
 import itmo.commands.*;
+import itmo.deserializers.ArgumentsDeserializer;
 import itmo.exceptions.CollectionException;
 import itmo.io.Printable;
 import itmo.io.Scannable;
-import itmo.model.Color;
 import itmo.model.Dragon;
-import itmo.model.builders.DragonBuilder;
+import itmo.utils.CommandArguments;
 import itmo.utils.CommandInfo;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Этот класс определяет команду
@@ -33,12 +36,30 @@ public class CommandsManager {
         this.collection = collection;
     }
 
-    public void sendCommandInfo(Scannable serverReader, Printable serverPrinter) throws IOException, CollectionException {
+    public void sendCommandInfo(Scannable serverReader, Printable serverPrinter, boolean isConsole) throws Exception {
         String commandName = serverReader.scanString();
         CommandInfo commandInfo = getCommandInfo(commandName);
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(commandInfo);
         serverPrinter.printLine(json);
+        if (!commandInfo.isStatus())
+            return;
+//        String jsonTypes = serverReader.scanString();
+//        String jsonArgs = serverReader.scanString();
+//        CommandArguments commandArguments = ArgumentsDeserializer.deserialize(jsonTypes, jsonArgs);
+
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(CommandArguments.class, new ArgumentsDeserializer());
+        objectMapper.registerModule(module);
+
+        String args = serverReader.scanString();
+        CommandArguments commandArguments = objectMapper.readValue(args, CommandArguments.class);
+        try {
+            getCommand(commandInfo, commandArguments, serverReader, serverPrinter, isConsole).execute();
+        } catch (Exception e){
+            serverPrinter.printLine("/noresponse/Что-то не так: " + e.getMessage());
+        }
+        serverPrinter.printLine("/end/");
     }
     public CommandInfo getCommandInfo(String commandName) throws CollectionException {
         switch (commandName) {
@@ -115,157 +136,130 @@ public class CommandsManager {
                 commandInfo.setStatus(false);
                 return commandInfo;
             }
-
         }
     }
     /**
      * Метод определяющий команду
      *
-     * @param commandLine - значение поля commandLine
      * @param scannable   - значение поля scannable
      * @param isConsole   - значение поля isConsole
      * @return - введенная команда
      */
-    public Command getCommand(String commandLine, Scannable scannable, boolean isConsole) throws Exception {
+    public Command getCommand(CommandInfo commandInfo, CommandArguments commandArguments, Scannable scannable, Printable printable, boolean isConsole) throws Exception {
         try {
-            String[] arrayLine = commandLine.trim().replaceAll("\\s+", " ").split(" ");
-
-            if (arrayLine.length == 0) {
-                throw new CollectionException("Нет команд");
-
-            }
-            String command = arrayLine[0];
-            switch (command) {
+            switch (commandInfo.getName()) {
                 case "clear": {
-                    if (arrayLine.length > 1) {
-                        throw new CollectionException("Команда введена некорректно");
-                    }
-                    return new Clear(collection);
+                    List<Object> args = new ArrayList<>(Arrays.asList(commandArguments.arguments));
+                    args.add(collection);
+                    args.add(printable);
+                    return (Command) Clear.class.getConstructors()[0].newInstance(args.toArray());
                 }
 
                 case "show": {
-                    if (arrayLine.length > 1) {
-                        throw new CollectionException("Команда введена некорректно");
-                    }
-                    return new Show(collection);
+                    List<Object> args = new ArrayList<>(Arrays.asList(commandArguments.arguments));
+                    args.add(collection);
+                    args.add(printable);
+                    return (Command) Show.class.getConstructors()[0].newInstance(args.toArray());
                 }
 
                 case "info": {
-                    if (arrayLine.length > 1) {
-                        throw new CollectionException("Команда введена некорректно");
-                    }
-                    return new Info(collection);
+                    List<Object> args = new ArrayList<>(Arrays.asList(commandArguments.arguments));
+                    args.add(collection);
+                    args.add(printable);
+                    return (Command) Info.class.getConstructors()[0].newInstance(args.toArray());
 
                 }
 
                 case "insert": {
-
-                    if (arrayLine.length < 2) {
-                        throw new CollectionException("Введены не все поля");
-                    }
-                    Integer key = Integer.parseInt(arrayLine[1]);
-                    DragonBuilder dragonBuilder = new DragonBuilder(isConsole, scannable);
-                    return new Insert(collection, key, dragonBuilder);
+                    List<Object> args = new ArrayList<>(Arrays.asList(commandArguments.arguments));
+                    args.add(collection);
+                    args.add(scannable);
+                    args.add(printable);
+                    return (Command) Insert.class.getConstructors()[0].newInstance(args.toArray());
                 }
 
                 case "exit": {
-                    if (arrayLine.length > 1) {
-                        throw new CollectionException("Команда введена некорректно");
-                    }
-                    return new Exit();
+                    List<Object> args = new ArrayList<>(Arrays.asList(commandArguments.arguments));
+                    return (Command) Exit.class.getConstructors()[0].newInstance(args.toArray());
 
                 }
 
                 case "help": {
-                    if (arrayLine.length > 1) {
-                        throw new CollectionException("Команда введена некорректно");
-                    }
-                    return new Help();
+                    List<Object> args = new ArrayList<>(Arrays.asList(commandArguments.arguments));
+                    args.add(printable);
+                    return (Command) Help.class.getConstructors()[0].newInstance(args.toArray());
                 }
 
                 case "print_descending": {
-                    if (arrayLine.length > 1) {
-                        throw new CollectionException("Команда введена некорректно");
-                    }
-                    return new PrintDescending(collection);
+                    List<Object> args = new ArrayList<>(Arrays.asList(commandArguments.arguments));
+                    args.add(collection);
+                    args.add(printable);
+                    return (Command) PrintDescending.class.getConstructors()[0].newInstance(args.toArray());
                 }
 
                 case "remove_all_by_color": {
+                    List<Object> args = new ArrayList<>(Arrays.asList(commandArguments.arguments));
+                    args.add(collection);
+                    return (Command) RemoveAllByColor.class.getConstructors()[0].newInstance(args.toArray());
 
-                    if (arrayLine.length < 2) {
-                        throw new CollectionException("Введены не все поля");
-                    }
-                    Color color = Color.parse(arrayLine[1]);
-                    return new RemoveAllByColor(collection, color);
                 }
 
                 case "remove_greater_key": {
-
-                    if (arrayLine.length < 2) {
-                        throw new CollectionException("Введены не все поля");
-                    }
-                    Integer key = Integer.parseInt(arrayLine[1]);
-                    return new RemoveGreaterKey(collection, key);
+                    List<Object> args = new ArrayList<>(Arrays.asList(commandArguments.arguments));
+                    args.add(collection);
+                    return (Command) RemoveGreaterKey.class.getConstructors()[0].newInstance(args.toArray());
                 }
 
                 case "remove_key": {
-
-                    if (arrayLine.length < 2) {
-                        throw new CollectionException("Введены не все поля");
-                    }
-                    Integer key = Integer.parseInt(arrayLine[1]);
-                    return new RemoveKey(collection, key);
+                    List<Object> args = new ArrayList<>(Arrays.asList(commandArguments.arguments));
+                    args.add(collection);
+                    return (Command) RemoveKey.class.getConstructors()[0].newInstance(args.toArray());
                 }
 
                 case "save": {
-                    if (arrayLine.length > 1) {
-                        throw new CollectionException("Команда введена некорректно");
-                    }
-                    return new Save(collection);
+                    List<Object> args = new ArrayList<>(Arrays.asList(commandArguments.arguments));
+                    args.add(collection);
+                    return (Command) Save.class.getConstructors()[0].newInstance(args.toArray());
                 }
 
                 case "sum_of_age": {
-                    if (arrayLine.length > 1) {
-                        throw new CollectionException("Команда введена некорректно");
-                    }
-                    return new SumOfAge(collection);
+                    List<Object> args = new ArrayList<>(Arrays.asList(commandArguments.arguments));
+                    args.add(collection);
+                    args.add(printable);
+                    return (Command) SumOfAge.class.getConstructors()[0].newInstance(args.toArray());
                 }
 
 
                 case "remove_lower": {
-                    if (arrayLine.length > 1) {
-                        throw new CollectionException("Команда введена некорректно");
-                    }
-                    DragonBuilder dragonBuilder = new DragonBuilder(isConsole, scannable);
-                    return new RemoveLower(collection, dragonBuilder);
+                    List<Object> args = new ArrayList<>(Arrays.asList(commandArguments.arguments));
+                    args.add(collection);
+                    args.add(scannable);
+                    args.add(printable);
+                    return (Command) RemoveLower.class.getConstructors()[0].newInstance(args.toArray());
                 }
 
                 case "replace_if_lower": {
-
-                    if (arrayLine.length < 2) {
-                        throw new CollectionException("Введены не все поля");
-                    }
-                    DragonBuilder dragonBuilder = new DragonBuilder(isConsole, scannable);
-                    Integer key = Integer.parseInt(arrayLine[1]);
-                    return new ReplaceIfLower(collection, key, dragonBuilder);
+                    List<Object> args = new ArrayList<>(Arrays.asList(commandArguments.arguments));
+                    args.add(collection);
+                    args.add(scannable);
+                    args.add(printable);
+                    return (Command) ReplaceIfLower.class.getConstructors()[0].newInstance(args.toArray());
                 }
 
                 case "update": {
-                    if (arrayLine.length < 2) {
-                        throw new CollectionException("Введены не все поля");
-                    }
-                    DragonBuilder dragonBuilder = new DragonBuilder(isConsole, scannable);
-                    Long id = Long.parseLong(arrayLine[1]);
-                    return new UpdateId(collection, id, dragonBuilder);
-
+                    List<Object> args = new ArrayList<>(Arrays.asList(commandArguments.arguments));
+                    args.add(collection);
+                    args.add(scannable);
+                    args.add(printable);
+                    return (Command) UpdateId.class.getConstructors()[0].newInstance(args.toArray());
                 }
                 case "execute_script": {
 
-                    if (arrayLine.length < 2) {
-                        throw new CollectionException("Введены не все поля");
-                    }
-                    String nameFile = arrayLine[1];
-                    return new ExecuteScript(nameFile, collection);
+//                    if (arrayLine.length < 2) {
+//                        throw new CollectionException("Введены не все поля");
+//                    }
+//                    String nameFile = arrayLine[1];
+//                    return new ExecuteScript(nameFile, collection);
                 }
                 default: {
                     throw new CollectionException("Такой команды нет :(");

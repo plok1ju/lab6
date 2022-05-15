@@ -1,5 +1,6 @@
 package itmo.model.builders;
 
+import itmo.io.Printable;
 import itmo.io.Scannable;
 import itmo.model.Coordinates;
 
@@ -34,10 +35,10 @@ public class CoordinatesBuilder {
      * @param scannable - значение поля scannable
      * @return coordinates   - значение объекта coordinates
      */
-    public Coordinates build(Scannable scannable) throws Exception {
+    public Coordinates build(Scannable scannable, Printable printable) throws Exception {
         coordinates = new Coordinates();
-        this.buildX(scannable);
-        this.buildY(scannable);
+        this.buildX(scannable, printable);
+        this.buildY(scannable, printable);
         return coordinates;
 
     }
@@ -47,15 +48,15 @@ public class CoordinatesBuilder {
      *
      * @param scannable - значение поля scannable
      */
-    private void buildX(Scannable scannable) throws Exception {
+    private void buildX(Scannable scannable, Printable printable) throws Exception {
         if (isConsole) {
             try {
-                System.out.println("Введите координату х: ");
+                printable.printLine("Введите координату х: ");
                 Double x = Double.parseDouble(scannable.scanString());
                 coordinates.setX(x);
             } catch (Exception e) {
-                System.out.println("Что-то не то с координатой х: " + e.getMessage());
-                this.buildX(scannable);
+                printable.printLine("/noresponse/Что-то не то с координатой х: " + e.getMessage());
+                this.buildX(scannable, printable);
             }
         } else {
             Double x = Double.parseDouble(scannable.scanString());
@@ -69,15 +70,15 @@ public class CoordinatesBuilder {
      *
      * @param scannable - значение поля scannable
      */
-    private void buildY(Scannable scannable) throws Exception {
+    private void buildY(Scannable scannable, Printable printable) throws Exception {
         if (isConsole) {
             try {
-                System.out.println("Введите координату y: ");
+                printable.printLine("Введите координату y: ");
                 int y = Integer.parseInt(scannable.scanString());
                 coordinates.setY(y);
             } catch (Exception e) {
-                System.out.println("Что-то не то с координатой y: " + e.getMessage());
-                this.buildY(scannable);
+                printable.printLine("/noresponse/Что-то не то с координатой y: " + e.getMessage());
+                this.buildY(scannable, printable);
             }
         } else {
             int y = Integer.parseInt(scannable.scanString());

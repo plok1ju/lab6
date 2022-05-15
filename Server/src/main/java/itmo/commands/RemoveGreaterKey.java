@@ -27,7 +27,7 @@ public class RemoveGreaterKey implements Command {
      * @param collection - Поле collection
      * @param key        - Поле key
      */
-    public RemoveGreaterKey(HashTableCollection<? extends Integer, ?> collection, Integer key) {
+    public RemoveGreaterKey(Integer key, HashTableCollection<? extends Integer, ?> collection) {
         this.collection = collection;
         this.key = key;
     }
@@ -42,4 +42,5 @@ public class RemoveGreaterKey implements Command {
         keys.stream().filter(keyInKeys -> keyInKeys.compareTo(this.key) > 0).forEach(collection::remove);
 
     }
+
 }

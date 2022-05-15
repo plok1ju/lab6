@@ -1,5 +1,9 @@
 package itmo.utils;
 
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import itmo.commands.Command;
 
 public class CommandInfo {
@@ -9,7 +13,6 @@ public class CommandInfo {
     private int complexArguments;
     private String name;
 
-    private Command command;
 
     public CommandInfo(){}
     public CommandInfo(int simpleArguments, int complexArguments, String name) {
@@ -48,13 +51,5 @@ public class CommandInfo {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Command getCommand() {
-        return command;
-    }
-
-    public void setCommand(Command command) {
-        this.command = command;
     }
 }

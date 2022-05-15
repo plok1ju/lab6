@@ -2,6 +2,8 @@ package itmo.commands;
 
 import itmo.collection.HashTableCollection;
 import itmo.exceptions.CollectionException;
+import itmo.io.Printable;
+import itmo.io.Scannable;
 import itmo.model.Dragon;
 import itmo.model.builders.DragonBuilder;
 
@@ -26,18 +28,22 @@ public class Insert implements Command {
      * {@link Dragon}
      */
     private final DragonBuilder dragonBuilder;
+    private final Scannable scannable;
+    private final Printable printable;
 
     /**
      * Конструктор класса Insert
      *
-     * @param collection    - Поле collection
      * @param key           - Поле key
      * @param dragonBuilder - Поле dragonBuilder
+     * @param collection    - Поле collection
      */
-    public Insert(HashTableCollection<Integer, Dragon> collection, Integer key, DragonBuilder dragonBuilder) {
+    public Insert(Integer key, DragonBuilder dragonBuilder, HashTableCollection<Integer, Dragon> collection, Scannable scannable, Printable printable) {
         this.collection = collection;
         this.key = key;
         this.dragonBuilder = dragonBuilder;
+        this.scannable = scannable;
+        this.printable = printable;
     }
 
     /**
@@ -49,7 +55,7 @@ public class Insert implements Command {
         if (collection.getKeysAsList().contains(key)) {
             throw new CollectionException("Элемент с таким key уже есть");
         }
-        Dragon dragon = this.dragonBuilder.build();
+        Dragon dragon = this.dragonBuilder.build(scannable, printable);
         collection.put(key, dragon);
 
     }

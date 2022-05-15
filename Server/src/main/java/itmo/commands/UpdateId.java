@@ -2,6 +2,8 @@ package itmo.commands;
 
 import itmo.collection.HashTableCollection;
 import itmo.exceptions.CollectionException;
+import itmo.io.Printable;
+import itmo.io.Scannable;
 import itmo.model.Dragon;
 import itmo.model.builders.DragonBuilder;
 
@@ -30,6 +32,8 @@ public class UpdateId implements Command {
      * {@link DragonBuilder}
      */
     private final DragonBuilder dragonBuilder;
+    private final Scannable scannable;
+    private final Printable printable;
 
     /**
      * Конструктор класса UpdateId
@@ -37,11 +41,15 @@ public class UpdateId implements Command {
      * @param collection    - Поле collection
      * @param id            - Поле id
      * @param dragonBuilder - Поле dragonBuilder
+     * @param scannable
+     * @param printable
      */
-    public UpdateId(HashTableCollection<Integer, Dragon> collection, Long id, DragonBuilder dragonBuilder) {
+    public UpdateId(Long id, DragonBuilder dragonBuilder, HashTableCollection<Integer, Dragon> collection, Scannable scannable, Printable printable) {
         this.collection = collection;
         this.id = id;
         this.dragonBuilder = dragonBuilder;
+        this.scannable = scannable;
+        this.printable = printable;
     }
 
     /**
@@ -56,7 +64,7 @@ public class UpdateId implements Command {
         if (!optionalKey.isPresent()) {
             throw new CollectionException("Нет такого id");
         }
-        Dragon dragon = dragonBuilder.build();
+        Dragon dragon = dragonBuilder.build(scannable, printable);
         dragon.setId(this.id);
         Integer dragonKey = optionalKey.get();
         keys.stream().filter(key -> id.equals(collection.get(key).getId())).forEach(collection::remove);

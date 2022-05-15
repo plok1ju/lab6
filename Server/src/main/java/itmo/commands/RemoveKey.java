@@ -25,7 +25,7 @@ public class RemoveKey implements Command {
      * @param collection - Поле collection
      * @param key        - Поле key
      */
-    public RemoveKey(HashTableCollection<? extends Integer, ?> collection, Integer key) {
+    public RemoveKey(Integer key, HashTableCollection<? extends Integer, ?> collection) {
         this.collection = collection;
         this.key = key;
     }
@@ -41,4 +41,6 @@ public class RemoveKey implements Command {
         }
         collection.remove(key);
     }
+
+
 }
