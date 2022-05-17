@@ -40,7 +40,7 @@ public class SumOfAge implements Command {
      * Вывод суммы полей age всех элементов коллекции
      */
     @Override
-    public void execute() throws IOException {
+    public void execute() throws Exception {
         List<?> keys = collection.getKeysAsList();
         keys.forEach(key -> sumAge += (collection.get(key).getAge() == null ? 0 : collection.get(key).getAge()));
         printable.printLine("/noresponse//Сумма возрастов: " + sumAge);

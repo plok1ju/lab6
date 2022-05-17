@@ -45,7 +45,7 @@ public class PrintDescending implements Command {
             try {
                 printable.printLine("/noresponse/=====\n");
                 printable.printLine("/noresponse/Ключ элемента " + key + ": " + o + "\n");
-            } catch (IOException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
 

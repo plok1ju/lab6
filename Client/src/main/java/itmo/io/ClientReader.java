@@ -1,9 +1,6 @@
 package itmo.io;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -35,15 +32,22 @@ public class ClientReader implements Scannable{
                 selectionKeyIterator.remove();
 
                 if (key.isReadable()){
-//                    System.out.println("ready");
+                    System.out.println("ready");
                     SocketChannel socketChannel = (SocketChannel) key.channel();
 
                     ++lines;
                     ByteBuffer byteBuffer = ByteBuffer.allocate(10000);
-                    int size = socketChannel.read(byteBuffer);
+                    int size = 0;
+                    try {
+                        size = socketChannel.read(byteBuffer);
+                    } catch (Exception e){
+                        System.out.println("СЕРВЕР ЕБНУЛСЯ!!!!");
+                        System.exit(1);
+                    }
                     if (size == -1 || size == 0)
                         return "";
-                    return new String(byteBuffer.array()).trim();
+                    String s = new String(byteBuffer.array()).trim();
+                    return s;
 
                 }
 //                selectionKeyIterator.remove();

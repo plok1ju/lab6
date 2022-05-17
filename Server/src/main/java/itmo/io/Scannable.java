@@ -12,7 +12,7 @@ public interface Scannable {
      *
      * @return scanString
      */
-    String scanString() throws IOException;
+    String scanString() throws Exception;
 
     /**
      * Возвращает наличие строки

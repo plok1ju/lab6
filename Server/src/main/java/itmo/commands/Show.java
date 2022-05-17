@@ -43,6 +43,8 @@ public class Show implements Command {
                 printable.printLine("/noresponse/=====");
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         });
     }

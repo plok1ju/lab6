@@ -41,7 +41,6 @@ public class Main {
             System.out.println("Введите команду: ");
 
             commandsManager.getCommand(consoleScan.scanString(), consoleScan, clientReader, clientPrinter, true);
-//            commandsManager.receiveCommandInfo(commandString, clientReader, clientPrinter);
 
         } catch (Exception e) {
             System.out.println("Что-то пошло не так: " + e.getMessage());

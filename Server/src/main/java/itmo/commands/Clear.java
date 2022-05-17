@@ -33,7 +33,7 @@ public class Clear implements Command {
      * Очищение коллекции
      */
     @Override
-    public void execute() throws IOException {
+    public void execute() throws Exception {
         collection.clear();
         printable.printLine("/noresponse/Коллекция очищена");
 

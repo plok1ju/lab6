@@ -53,6 +53,7 @@ public class CommandsManager {
         objectMapper.registerModule(module);
 
         String args = serverReader.scanString();
+        System.out.println("Args: " + args);
         CommandArguments commandArguments = objectMapper.readValue(args, CommandArguments.class);
         try {
             getCommand(commandInfo, commandArguments, serverReader, serverPrinter, isConsole).execute();
@@ -105,9 +106,9 @@ public class CommandsManager {
                 return new CommandInfo(1, 0, commandName);
             }
 
-            case "save": {
+            /*case "save": {
                 return new CommandInfo(0, 0, commandName);
-            }
+            }*/
 
             case "sum_of_age": {
                 return new CommandInfo(0, 0, commandName);
@@ -180,6 +181,7 @@ public class CommandsManager {
 
                 case "exit": {
                     List<Object> args = new ArrayList<>(Arrays.asList(commandArguments.arguments));
+                    args.add(printable);
                     return (Command) Exit.class.getConstructors()[0].newInstance(args.toArray());
 
                 }
@@ -254,12 +256,11 @@ public class CommandsManager {
                     return (Command) UpdateId.class.getConstructors()[0].newInstance(args.toArray());
                 }
                 case "execute_script": {
-
-//                    if (arrayLine.length < 2) {
-//                        throw new CollectionException("Введены не все поля");
-//                    }
-//                    String nameFile = arrayLine[1];
-//                    return new ExecuteScript(nameFile, collection);
+                    List<Object> args = new ArrayList<>(Arrays.asList(commandArguments.arguments));
+                    args.add(collection);
+                    args.add(scannable);
+                    args.add(printable);
+                    return (Command) ExecuteScript.class.getConstructors()[0].newInstance(args.toArray());
                 }
                 default: {
                     throw new CollectionException("Такой команды нет :(");

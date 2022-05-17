@@ -59,11 +59,11 @@ public class PersonBuilder {
     private void buildName(Scannable scannable, Printable printable) throws Exception {
         if (isConsole) {
             try {
-                System.out.println("Введите имя человека: ");
+                printable.printLine("Введите имя человека: ");
                 String nameKiller = scannable.scanString();
                 person.setName(nameKiller);
             } catch (Exception e) {
-                System.out.println("/noresponse/Что-то пошло не так: " + e.getMessage());
+                printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
                 this.buildName(scannable, printable);
             }
 
@@ -85,11 +85,11 @@ public class PersonBuilder {
     private void buildBirthday(Scannable scannable, Printable printable) throws Exception {
         if (isConsole) {
             try {
-                System.out.println("Введите дату рождения в формате yyyy-MM-dd HH:mm: ");
+                printable.printLine("Введите дату рождения в формате yyyy-MM-dd HH:mm: ");
                 LocalDateTime birthday = LocalDateTime.parse(scannable.scanString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
                 person.setBirthday(birthday);
             } catch (Exception e) {
-                System.out.println("/noresponse/Что-то пошло не так: " + e.getMessage());
+                printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
                 this.buildBirthday(scannable, printable);
             }
         } else {
@@ -106,7 +106,7 @@ public class PersonBuilder {
     private void buildHeight(Scannable scannable, Printable printable) throws Exception {
         if (isConsole) {
             try {
-                System.out.println("Введите рост человека:");
+                printable.printLine("Введите рост человека:");
                 String heightString = scannable.scanString();
                 Long height;
                 if (!heightString.equals("")) {
@@ -117,7 +117,7 @@ public class PersonBuilder {
                 person.setHeight(height);
 
             } catch (Exception e) {
-                System.out.println("/noresponse/Что-то пошло не так: " + e.getMessage());
+                printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
                 this.buildHeight(scannable, printable);
             }
         } else {
@@ -140,12 +140,12 @@ public class PersonBuilder {
     private void buildPassportID(Scannable scannable, Printable printable) throws Exception {
         if (isConsole) {
             try {
-                System.out.println("Введите ID паспорта: ");
+                printable.printLine("Введите ID паспорта: ");
                 String passportId = scannable.scanString();
 
                 person.setPassportID(passportId);
             } catch (Exception e) {
-                System.out.println("/noresponse/Что-то пошло не так: " + e.getMessage());
+                printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
                 this.buildPassportID(scannable, printable);
             }
 
@@ -164,12 +164,11 @@ public class PersonBuilder {
     private void buildNationality(Scannable scannable, Printable printable) throws Exception {
         if (isConsole) {
             try {
-                System.out.println("Выберете одну из предложенных национальностей");
-                System.out.println(Country.getValues());
+                printable.printLine("Выберете одну из предложенных национальностей: " + Country.getValues());
                 Country nationality = Country.parse(scannable.scanString());
                 person.setNationality(nationality);
             } catch (Exception e) {
-                System.out.println("/noresponse/Что-то пошло не так: " + e.getMessage());
+                printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
                 this.buildNationality(scannable, printable);
             }
         } else {

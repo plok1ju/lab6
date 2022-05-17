@@ -2,6 +2,7 @@ package itmo.manager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import itmo.exceptions.CollectionException;
+import itmo.io.FileScan;
 import itmo.io.Printable;
 import itmo.io.Scannable;
 import itmo.model.Color;
@@ -33,7 +34,9 @@ public class CommandsManager {
 
     private void waitResponseFromServer(Scannable scannable, Scannable clientReader, Printable clientPrinter) throws IOException {
         while (true){
-            String response = clientReader.scanString();
+            String response = "resp: ".concat(clientReader.scanString());
+            if (response.contains("/exit/"))
+                System.exit(0);
             if (response.endsWith("/end/")){
                 System.out.println(response.replace("/end/", "").replace("/noresponse/", ""));
                 break;
@@ -65,6 +68,7 @@ public class CommandsManager {
             }
             String command = arrayLine[0];
             CommandInfo commandInfo = receiveCommandInfo(command, clientReader, clientPrinter);
+            System.out.println("CI: " + commandInfo.getName());
             ObjectMapper objectMapper = new ObjectMapper();
             CommandArguments commandArguments = new CommandArguments();
             switch (commandInfo.getName()) {
@@ -298,10 +302,22 @@ public class CommandsManager {
                         throw new CollectionException("Введены не все поля");
                     }
                     String nameFile = arrayLine[1];
-                    //commandInfo.setCommand(new ExecuteScript(nameFile, collection));
-//                    commandInfo.setArguments(nameFile);
-                    String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(commandInfo);
-                    clientPrinter.printLine(json);
+                    Object[] args = {nameFile};
+                    Class[] types = {String.class};
+                    commandArguments.arguments = args;
+                    commandArguments.types = types;
+                    String jsonArgs = objectMapper.writeValueAsString(commandArguments);
+                    clientPrinter.printLine(jsonArgs);
+
+                    Thread.sleep(1000);
+                    Scannable fileScan = new FileScan(nameFile);
+                    while (fileScan.hasNextLine()) {
+                        String commandString = fileScan.scanString();
+                        this.getCommand(commandString, fileScan, clientReader, clientPrinter, false);
+
+                    }
+
+
                     break;
                 }
                 default: {

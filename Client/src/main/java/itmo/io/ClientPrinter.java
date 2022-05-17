@@ -18,7 +18,13 @@ public class ClientPrinter implements Printable{
 
     @Override
     public void printLine(String line) throws IOException {
-        socketChannel.write(ByteBuffer.wrap(line.concat("\n").getBytes(StandardCharsets.UTF_8)));
+        try {
+            socketChannel.write(ByteBuffer.wrap(line.concat("\n").getBytes(StandardCharsets.UTF_8)));
+            socketChannel.socket().getOutputStream().flush();
+        } catch (Exception e){
+            System.out.println("СЕРВЕР ЕБНУЛСЯ!!!!");
+            System.exit(1);
+        }
     }
 
     @Override

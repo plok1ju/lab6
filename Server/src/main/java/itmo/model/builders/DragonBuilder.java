@@ -138,7 +138,7 @@ public class DragonBuilder {
      *
      * @param scannable - значение поля scannable
      */
-    private void buildDescription(Scannable scannable, Printable printable) throws IOException {
+    private void buildDescription(Scannable scannable, Printable printable) throws Exception {
         if (isConsole) {
             try {
                 printable.printLine("Введите описание дракона:");

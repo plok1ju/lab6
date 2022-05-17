@@ -20,7 +20,7 @@ public class Help implements Command {
      * Вывод возможных команд
      */
     @Override
-    public void execute() throws IOException {
+    public void execute() throws Exception {
         printable.printLine("/noresponse/help : вывести справку по доступным командам\n" +
                 "info : вывести в стандартный поток вывода информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)\n" +
                 "show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении\n" +

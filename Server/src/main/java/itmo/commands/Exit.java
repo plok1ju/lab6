@@ -1,14 +1,16 @@
 package itmo.commands;
 
+import itmo.io.Printable;
+
 /**
  * Класс отвечает за завершение программы
  */
 public class Exit implements Command {
 
-    /**
-     * Пустой конструктор класса Exit
-     */
-    public Exit() {
+    private final Printable printable;
+
+    public Exit(Printable printable) {
+        this.printable = printable;
     }
 
     /**
@@ -16,8 +18,8 @@ public class Exit implements Command {
      * Завершение программы
      */
     @Override
-    public void execute() {
-        System.exit(0);
+    public void execute() throws Exception {
+        printable.printLine("/exit/");
     }
 
 }

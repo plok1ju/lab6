@@ -1,22 +1,40 @@
 package itmo.io;
 
+import itmo.Main;
+import itmo.commands.Save;
+import itmo.utils.ConnectionCheck;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 
 public class ServerPrinter implements Printable{
 
     private OutputStream out;
+    private Socket clientSocket;
 
-    public ServerPrinter(OutputStream out) throws IOException {
-        this.out = out;
+    public ServerPrinter(Socket clientSocket) throws IOException {
+        this.out = clientSocket.getOutputStream();
+        this.clientSocket = clientSocket;
     }
 
 
     @Override
-    public void printLine(String line) throws IOException {
-        out.write(line.getBytes(StandardCharsets.UTF_8));
+    public void printLine(String line) throws Exception {
+        if (!ConnectionCheck.isConnected(clientSocket)){
+            new Save(Main.collection).execute();
+            Thread.currentThread().stop();
+        }
+        try {
+            out.write(line.getBytes(StandardCharsets.UTF_8));
+            out.flush();
+        } catch (SocketException e){
+            new Save(Main.collection).execute();
+            Thread.currentThread().stop();
+        }
     }
 
     @Override

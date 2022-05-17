@@ -16,15 +16,15 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class Main {
-    private static HashTableCollection<Integer, Dragon> collection = new HashTableCollection<>();
+    public static HashTableCollection<Integer, Dragon> collection = new HashTableCollection<>();
     public static void main(String[] args) throws Exception {
 
-        ServerSocket serverSocket = new ServerSocket(8181);
+        ServerSocket serverSocket = new ServerSocket(Integer.parseInt(args[0]));
         Socket client = serverSocket.accept();
         System.out.println("Connection");
         Scanner sc = new Scanner(System.in);
-        Scannable serverReader = new ServerReader(client.getInputStream());
-        ServerPrinter serverPrinter = new ServerPrinter(client.getOutputStream());
+        Scannable serverReader = new ServerReader(client);
+        ServerPrinter serverPrinter = new ServerPrinter(client);
 
 
         ReaderXml readerXml = new ReaderXml();
