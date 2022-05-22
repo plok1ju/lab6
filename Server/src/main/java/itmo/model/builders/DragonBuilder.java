@@ -2,6 +2,7 @@ package itmo.model.builders;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import itmo.commands.PrintDescending;
+import itmo.exceptions.ServerException;
 import itmo.io.Printable;
 import itmo.io.Scannable;
 import itmo.manager.IdGenerator;
@@ -89,7 +90,10 @@ public class DragonBuilder {
                 String nameDragon = scannable.scanString();
                 dragon.setName(nameDragon);
 
-            } catch (Exception e) {
+            } catch (ServerException serverException){
+                throw serverException;
+            }
+            catch (Exception e) {
                 printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
                 this.buildName(scannable, printable);
             }
@@ -116,7 +120,10 @@ public class DragonBuilder {
                     age = Integer.parseInt(ageString);
                 }
                 dragon.setAge(age);
-            } catch (Exception e) {
+            } catch (ServerException serverException){
+                throw serverException;
+            }
+            catch (Exception e) {
                 printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
                 this.buildAge(scannable, printable);
 
@@ -148,7 +155,10 @@ public class DragonBuilder {
                 }
                 dragon.setDescription(description);
 
-            } catch (Exception e) {
+            } catch (ServerException serverException){
+                throw serverException;
+            }
+            catch (Exception e) {
                 printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
                 this.buildDescription(scannable, printable);
 
@@ -173,7 +183,10 @@ public class DragonBuilder {
                 printable.printLine("Выберете одно из предложенных значений цвета для дракона " + Color.getValues());
                 Color color = Color.parse(scannable.scanString());
                 dragon.setColor(color);
-            } catch (Exception e) {
+            } catch (ServerException serverException){
+                throw serverException;
+            }
+            catch (Exception e) {
                 printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
                 this.buildColor(scannable, printable);
             }
@@ -194,7 +207,10 @@ public class DragonBuilder {
                 printable.printLine("Выберете одно из предложенных значений характера дракона " + DragonCharacter.getValues());
                 DragonCharacter character = DragonCharacter.parse(scannable.scanString());
                 dragon.setCharacter(character);
-            } catch (Exception e) {
+            } catch (ServerException serverException){
+                throw serverException;
+            }
+            catch (Exception e) {
                 printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
                 this.buildCharacter(scannable, printable);
             }
@@ -248,7 +264,10 @@ public class DragonBuilder {
             try {
                 PersonBuilder personBuilder = new PersonBuilder(isConsole);
                 dragon.setKiller(personBuilder.build(scannable, printable));
-            } catch (Exception e) {
+            } catch (ServerException serverException){
+                throw serverException;
+            }
+            catch (Exception e) {
                 dragon.setKiller(null);
             }
         }

@@ -3,6 +3,7 @@ package itmo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import itmo.collection.HashTableCollection;
 import itmo.exceptions.CollectionException;
+import itmo.exceptions.ServerException;
 import itmo.io.Scannable;
 import itmo.io.ServerPrinter;
 import itmo.io.ServerReader;
@@ -37,11 +38,15 @@ public class Main {
 
         CommandsManager commandsManager = new CommandsManager(collection);
         while (true){
-//            System.out.println(serverReader.scanString());
-//            System.out.println("Mes: ");
-//            String m = sc.nextLine();
-//            serverPrinter.printLine(m);
-            commandsManager.sendCommandInfo(serverReader, serverPrinter, true);
+            try {
+                commandsManager.sendCommandInfo(serverReader, serverPrinter, true);
+            } catch (ServerException serverException){
+                client.close();
+                client = serverSocket.accept();
+                System.out.println("Connection");
+                serverReader = new ServerReader(client);
+                serverPrinter = new ServerPrinter(client);
+            }
         }
     }
 }

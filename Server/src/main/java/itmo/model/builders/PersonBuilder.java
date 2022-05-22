@@ -1,6 +1,7 @@
 package itmo.model.builders;
 
 import itmo.exceptions.CollectionException;
+import itmo.exceptions.ServerException;
 import itmo.io.Printable;
 import itmo.io.Scannable;
 import itmo.model.Country;
@@ -62,7 +63,10 @@ public class PersonBuilder {
                 printable.printLine("Введите имя человека: ");
                 String nameKiller = scannable.scanString();
                 person.setName(nameKiller);
-            } catch (Exception e) {
+            } catch (ServerException serverException){
+                throw serverException;
+            }
+            catch (Exception e) {
                 printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
                 this.buildName(scannable, printable);
             }
@@ -88,7 +92,10 @@ public class PersonBuilder {
                 printable.printLine("Введите дату рождения в формате yyyy-MM-dd HH:mm: ");
                 LocalDateTime birthday = LocalDateTime.parse(scannable.scanString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
                 person.setBirthday(birthday);
-            } catch (Exception e) {
+            } catch (ServerException serverException){
+                throw serverException;
+            }
+            catch (Exception e) {
                 printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
                 this.buildBirthday(scannable, printable);
             }
@@ -116,7 +123,10 @@ public class PersonBuilder {
                 }
                 person.setHeight(height);
 
-            } catch (Exception e) {
+            } catch (ServerException serverException){
+                throw serverException;
+            }
+            catch (Exception e) {
                 printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
                 this.buildHeight(scannable, printable);
             }
@@ -144,7 +154,10 @@ public class PersonBuilder {
                 String passportId = scannable.scanString();
 
                 person.setPassportID(passportId);
-            } catch (Exception e) {
+            } catch (ServerException serverException){
+                throw serverException;
+            }
+            catch (Exception e) {
                 printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
                 this.buildPassportID(scannable, printable);
             }
@@ -167,7 +180,10 @@ public class PersonBuilder {
                 printable.printLine("Выберете одну из предложенных национальностей: " + Country.getValues());
                 Country nationality = Country.parse(scannable.scanString());
                 person.setNationality(nationality);
-            } catch (Exception e) {
+            } catch (ServerException serverException){
+                throw serverException;
+            }
+            catch (Exception e) {
                 printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
                 this.buildNationality(scannable, printable);
             }

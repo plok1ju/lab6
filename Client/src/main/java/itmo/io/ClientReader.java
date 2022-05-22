@@ -32,7 +32,7 @@ public class ClientReader implements Scannable{
                 selectionKeyIterator.remove();
 
                 if (key.isReadable()){
-                    System.out.println("ready");
+//                    System.out.println("ready");
                     SocketChannel socketChannel = (SocketChannel) key.channel();
 
                     ++lines;

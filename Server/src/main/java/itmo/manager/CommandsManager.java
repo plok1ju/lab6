@@ -6,6 +6,7 @@ import itmo.collection.HashTableCollection;
 import itmo.commands.*;
 import itmo.deserializers.ArgumentsDeserializer;
 import itmo.exceptions.CollectionException;
+import itmo.exceptions.ServerException;
 import itmo.io.Printable;
 import itmo.io.Scannable;
 import itmo.model.Dragon;
@@ -57,7 +58,10 @@ public class CommandsManager {
         CommandArguments commandArguments = objectMapper.readValue(args, CommandArguments.class);
         try {
             getCommand(commandInfo, commandArguments, serverReader, serverPrinter, isConsole).execute();
-        } catch (Exception e){
+        } catch (ServerException serverException){
+            throw serverException;
+        }
+        catch (Exception e){
             serverPrinter.printLine("/noresponse/Что-то не так: " + e.getMessage());
         }
         serverPrinter.printLine("/end/");

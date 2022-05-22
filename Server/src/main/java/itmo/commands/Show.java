@@ -1,6 +1,7 @@
 package itmo.commands;
 
 import itmo.collection.HashTableCollection;
+import itmo.exceptions.ServerException;
 import itmo.io.Printable;
 
 import java.io.IOException;
@@ -34,19 +35,19 @@ public class Show implements Command {
      * Вывод коллекции
      */
     @Override
-    public void execute() {
+    public void execute() throws ServerException {
         List<?> keys = collection.getKeysAsList();
-        keys.forEach(key -> {
+        for (Object key : keys) {
             try {
                 printable.printLine("/noresponse/=====");
                 printable.printLine("/noresponse/Ключ элемента: " + key + "\n" + collection.get(key).toString());
                 printable.printLine("/noresponse/=====");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (ServerException serverException) {
+                throw serverException;
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-        });
+        }
     }
 
 }

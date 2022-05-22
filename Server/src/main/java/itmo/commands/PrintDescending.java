@@ -3,6 +3,7 @@ package itmo.commands;
 
 import itmo.collection.HashTableCollection;
 import itmo.comparators.CollectionComparator;
+import itmo.exceptions.ServerException;
 import itmo.io.Printable;
 import itmo.model.Dragon;
 
@@ -37,18 +38,20 @@ public class PrintDescending implements Command {
      * Вывод элементов коллекции
      */
     @Override
-    public void execute() {
+    public void execute() throws ServerException {
         List<Integer> keys = collection.getKeysAsList();
         keys.sort(new CollectionComparator(collection).reversed()); // реверс ключей
-        keys.forEach(key -> {
+        for (Integer key : keys) {
             Object o = collection.get(key);
             try {
                 printable.printLine("/noresponse/=====\n");
                 printable.printLine("/noresponse/Ключ элемента " + key + ": " + o + "\n");
+            } catch (ServerException serverException) {
+                throw serverException;
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
 
-        });
+        }
     }
 }

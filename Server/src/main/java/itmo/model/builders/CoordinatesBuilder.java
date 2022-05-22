@@ -1,5 +1,6 @@
 package itmo.model.builders;
 
+import itmo.exceptions.ServerException;
 import itmo.io.Printable;
 import itmo.io.Scannable;
 import itmo.model.Coordinates;
@@ -76,7 +77,10 @@ public class CoordinatesBuilder {
                 printable.printLine("Введите координату y: ");
                 int y = Integer.parseInt(scannable.scanString());
                 coordinates.setY(y);
-            } catch (Exception e) {
+            } catch (ServerException serverException){
+                throw serverException;
+            }
+            catch (Exception e) {
                 printable.printLine("/noresponse/Что-то не то с координатой y: " + e.getMessage());
                 this.buildY(scannable, printable);
             }

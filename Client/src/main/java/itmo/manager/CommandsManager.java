@@ -68,7 +68,7 @@ public class CommandsManager {
             }
             String command = arrayLine[0];
             CommandInfo commandInfo = receiveCommandInfo(command, clientReader, clientPrinter);
-            System.out.println("CI: " + commandInfo.getName());
+//            System.out.println("CI: " + commandInfo.getName());
             ObjectMapper objectMapper = new ObjectMapper();
             CommandArguments commandArguments = new CommandArguments();
             switch (commandInfo.getName()) {

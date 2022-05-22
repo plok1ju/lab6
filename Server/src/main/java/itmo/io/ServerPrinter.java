@@ -2,6 +2,7 @@ package itmo.io;
 
 import itmo.Main;
 import itmo.commands.Save;
+import itmo.exceptions.ServerException;
 import itmo.utils.ConnectionCheck;
 
 import java.io.IOException;
@@ -26,14 +27,14 @@ public class ServerPrinter implements Printable{
     public void printLine(String line) throws Exception {
         if (!ConnectionCheck.isConnected(clientSocket)){
             new Save(Main.collection).execute();
-            Thread.currentThread().stop();
+            throw new ServerException();
         }
         try {
             out.write(line.getBytes(StandardCharsets.UTF_8));
             out.flush();
         } catch (SocketException e){
             new Save(Main.collection).execute();
-            Thread.currentThread().stop();
+            throw new ServerException();
         }
     }
 
