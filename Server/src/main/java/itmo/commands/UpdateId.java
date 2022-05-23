@@ -5,7 +5,6 @@ import itmo.exceptions.CollectionException;
 import itmo.io.Printable;
 import itmo.io.Scannable;
 import itmo.model.Dragon;
-import itmo.model.builders.DragonBuilder;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,9 +28,9 @@ public class UpdateId implements Command {
 
     /**
      * Поле dragon
-     * {@link DragonBuilder}
+     * {@link Dragon}
      */
-    private final DragonBuilder dragonBuilder;
+    private final Dragon dragon;
     private final Scannable scannable;
     private final Printable printable;
 
@@ -40,14 +39,14 @@ public class UpdateId implements Command {
      *
      * @param collection    - Поле collection
      * @param id            - Поле id
-     * @param dragonBuilder - Поле dragonBuilder
+     * @param dragon - Поле dragonBuilder
      * @param scannable
      * @param printable
      */
-    public UpdateId(Long id, DragonBuilder dragonBuilder, HashTableCollection<Integer, Dragon> collection, Scannable scannable, Printable printable) {
+    public UpdateId(Long id, Dragon dragon, HashTableCollection<Integer, Dragon> collection, Scannable scannable, Printable printable) {
         this.collection = collection;
         this.id = id;
-        this.dragonBuilder = dragonBuilder;
+        this.dragon = dragon;
         this.scannable = scannable;
         this.printable = printable;
     }
@@ -64,7 +63,7 @@ public class UpdateId implements Command {
         if (!optionalKey.isPresent()) {
             throw new CollectionException("Нет такого id");
         }
-        Dragon dragon = dragonBuilder.build(scannable, printable);
+        Dragon dragon = this.dragon;
         dragon.setId(this.id);
         Integer dragonKey = optionalKey.get();
         keys.stream().filter(key -> id.equals(collection.get(key).getId())).forEach(collection::remove);

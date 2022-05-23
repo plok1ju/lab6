@@ -23,7 +23,7 @@ public class RemoveLower implements Command {
      * Поле dragonBuilder
      * {@link DragonBuilder}
      */
-    private final DragonBuilder dragonBuilder;
+    private final Dragon dragon;
     private final Scannable scannable;
     private final Printable printable;
 
@@ -31,13 +31,13 @@ public class RemoveLower implements Command {
      * Конструктор класса RemoveLower
      *
      * @param collection    - Поле collection
-     * @param dragonBuilder - Поле dragonBuilder
+     * @param dragon- Поле dragonBuilder
      * @param scannable
      * @param printable
      */
-    public RemoveLower(DragonBuilder dragonBuilder, HashTableCollection<Integer, Dragon> collection, Scannable scannable, Printable printable) {
+    public RemoveLower(Dragon dragon, HashTableCollection<Integer, Dragon> collection, Scannable scannable, Printable printable) {
         this.collection = collection;
-        this.dragonBuilder = dragonBuilder;
+        this.dragon = dragon;
         this.scannable = scannable;
         this.printable = printable;
     }
@@ -49,7 +49,7 @@ public class RemoveLower implements Command {
     @Override
     public void execute() throws Exception {
         List<Integer> keys = collection.getKeysAsList();
-        Dragon dragon = dragonBuilder.build(scannable, printable);
+        Dragon dragon = this.dragon;
         keys.stream().filter(key -> dragon.compareTo(collection.get(key)) > 0).forEach(collection::remove);
 
     }
