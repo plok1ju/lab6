@@ -5,6 +5,7 @@ import itmo.exceptions.CollectionException;
 import itmo.io.FileScan;
 import itmo.io.Printable;
 import itmo.io.Scannable;
+import itmo.io.StringReader;
 import itmo.manager.CommandsManager;
 import itmo.manager.FilesHistory;
 import itmo.model.Dragon;
@@ -19,8 +20,9 @@ import java.nio.file.Paths;
 public class ExecuteScript implements Command {
 
     /**
-     * Поле fileName
+     * Поле fileContent
      */
+    private final String fileContent;
     private final String fileName;
 
     /**
@@ -34,13 +36,14 @@ public class ExecuteScript implements Command {
     /**
      * Конструктор класса ExecuteScript
      *
-     * @param fileName   - Поле fileName
+     * @param fileContent   - Поле fileName
      * @param collection - Поле collection
      * @param scannable
      * @param printable
      */
-    public ExecuteScript(String fileName, HashTableCollection<Integer, Dragon> collection, Scannable scannable, Printable printable) {
-        this.fileName = fileName;
+    public ExecuteScript(String filename, String fileContent, HashTableCollection<Integer, Dragon> collection, Scannable scannable, Printable printable) {
+        this.fileName = filename;
+        this.fileContent = fileContent;
         this.collection = collection;
         this.scannable = scannable;
         this.printable = printable;
@@ -51,26 +54,23 @@ public class ExecuteScript implements Command {
      */
     @Override
     public void execute() throws Exception {
-        if (!Files.isReadable(Paths.get(fileName))) {
-            throw new CollectionException("Невозможно считать файл");
-        }
-        Scannable scannable = new FileScan(fileName);
+
+        Scannable scannable = new StringReader(fileContent);
         CommandsManager commandsManager = new CommandsManager(collection);
 
         if (FilesHistory.getInstance().containsFile(new File(fileName))) {
             throw new CollectionException("Чуть рекурсию не вызвал");
         }
-        FilesHistory.getInstance().addHistory(new File(fileName));
+        FilesHistory.getInstance().addHistory(new File(fileContent));
 
-        try {
-            for (Command command : commandsManager.getCommandsFromFile(scannable, printable)) {
-                command.execute();
+        while (scannable.hasNextLine()) {
+            try {
+                commandsManager.getCommandFromFile(scannable, printable).execute();
+            } catch (Exception e) {
+                printable.printLine(fileName + ": " + e.getMessage());
+//                throw new CollectionException(fileContent + ": " + e.getMessage() + "\n");
             }
-        } catch (Exception e) {
-//            System.out.println(fileName + ": " + e.getMessage());
-            throw new CollectionException(fileName + ": " + e.getMessage() + "\n");
-
         }
-        FilesHistory.getInstance().removeFile(new File(fileName));
+        FilesHistory.getInstance().removeFile(new File(fileContent));
     }
 }

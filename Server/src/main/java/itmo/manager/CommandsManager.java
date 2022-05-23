@@ -7,6 +7,7 @@ import itmo.commands.*;
 import itmo.deserializers.ArgumentsDeserializer;
 import itmo.exceptions.CollectionException;
 import itmo.exceptions.ServerException;
+import itmo.io.FileScan;
 import itmo.io.Printable;
 import itmo.io.Scannable;
 import itmo.model.Color;
@@ -15,6 +16,8 @@ import itmo.model.builders.DragonBuilder;
 import itmo.utils.CommandArguments;
 import itmo.utils.CommandInfo;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -68,7 +71,7 @@ public class CommandsManager {
         }
         serverPrinter.printLine("/end/");
     }
-    public CommandInfo getCommandInfo(String commandName) throws CollectionException {
+    public CommandInfo getCommandInfo(String commandName) {
         switch (commandName) {
             case "clear": {
                 return new CommandInfo(0, 0, commandName);
@@ -470,8 +473,13 @@ public class CommandsManager {
                         throw new CollectionException("Введены не все поля");
                     }
                     String nameFile = arrayLine[1];
-                    Object[] args = {nameFile};
-                    Class[] types = {String.class};
+                    StringBuilder stringBuilder = new StringBuilder();
+                    Scannable fileScan = new FileScan(nameFile);
+                    while (fileScan.hasNextLine()){
+                        stringBuilder.append(fileScan.scanString().concat("\n"));
+                    }
+                    Object[] args = {nameFile, stringBuilder.toString()};
+                    Class[] types = {String.class, String.class};
                     commandArguments.arguments = args;
                     commandArguments.types = types;
                     return commandArguments;
@@ -486,22 +494,18 @@ public class CommandsManager {
         }
     }
 
-    public List<Command> getCommandsFromFile(Scannable fileScan, Printable serverPrint) throws Exception {
-        List<Command> commands = new ArrayList<>();
-        while (fileScan.hasNextLine()){
-            String line = fileScan.scanString();
-            String[] words = line.trim().split(" ");
-            if (words.length < 1)
-                continue;
-            CommandInfo commandInfo = getCommandInfo(words[0]);
-            if (!commandInfo.isStatus())
-                throw new CollectionException("Ошибка при парсинге команды " + words[0]);
+    public Command getCommandFromFile(Scannable fileScan, Printable serverPrint) throws Exception {
+        String line = fileScan.scanString();
+        String[] words = line.trim().split(" ");
+        if (words.length < 1)
+            throw new CollectionException("no command");
+        CommandInfo commandInfo = getCommandInfo(words[0]);
+        if (!commandInfo.isStatus())
+            throw new CollectionException("Ошибка при парсинге команды " + words[0]);
 
-            CommandArguments commandArguments = getCommandArguments(line, commandInfo, fileScan, false);
-            Command command = getCommand(commandInfo, commandArguments,fileScan, serverPrint);
-            commands.add(command);
-        }
+        CommandArguments commandArguments = getCommandArguments(line, commandInfo, fileScan, false);
+        Command command = getCommand(commandInfo, commandArguments,fileScan, serverPrint);
 
-        return commands;
+        return command;
     }
 }
