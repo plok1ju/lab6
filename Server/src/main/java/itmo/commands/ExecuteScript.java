@@ -2,6 +2,7 @@ package itmo.commands;
 
 import itmo.collection.HashTableCollection;
 import itmo.exceptions.CollectionException;
+import itmo.exceptions.ServerException;
 import itmo.io.FileScan;
 import itmo.io.Printable;
 import itmo.io.Scannable;
@@ -67,7 +68,10 @@ public class ExecuteScript implements Command {
             while (scannable.hasNextLine()) {
                 commandsManager.getCommandFromFile(scannable, printable).execute();
             }
-        } catch (Exception e) {
+        }catch (ServerException serverException){
+            FilesHistory.getInstance().removeFile(new File(fileName));
+            throw serverException;
+        }catch (Exception e) {
 //            printable.printLine(fileName + ": " + e.getMessage());
             FilesHistory.getInstance().removeFile(new File(fileName));
             throw new CollectionException(fileName + ": " + e.getMessage() + "\n");
