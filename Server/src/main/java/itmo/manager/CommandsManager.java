@@ -59,7 +59,7 @@ public class CommandsManager {
         objectMapper.registerModule(module);
 
         String args = serverReader.scanString();
-        System.out.println("Args: " + args);
+//        System.out.println("Args: " + args);
         CommandArguments commandArguments = objectMapper.readValue(args, CommandArguments.class);
         try {
             getCommand(commandInfo, commandArguments, serverReader, serverPrinter).execute();

@@ -61,15 +61,16 @@ public class ExecuteScript implements Command {
         if (FilesHistory.getInstance().containsFile(new File(fileName))) {
             throw new CollectionException("Чуть рекурсию не вызвал");
         }
-        FilesHistory.getInstance().addHistory(new File(fileContent));
+        FilesHistory.getInstance().addHistory(new File(fileName));
 
-        while (scannable.hasNextLine()) {
-            try {
+        try {
+            while (scannable.hasNextLine()) {
                 commandsManager.getCommandFromFile(scannable, printable).execute();
-            } catch (Exception e) {
-                printable.printLine(fileName + ": " + e.getMessage());
-//                throw new CollectionException(fileContent + ": " + e.getMessage() + "\n");
             }
+        } catch (Exception e) {
+//            printable.printLine(fileName + ": " + e.getMessage());
+            FilesHistory.getInstance().removeFile(new File(fileContent));
+            throw new CollectionException(fileName + ": " + e.getMessage() + "\n");
         }
         FilesHistory.getInstance().removeFile(new File(fileContent));
     }
