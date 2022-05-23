@@ -7,9 +7,7 @@ import itmo.utils.ConnectionCheck;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 
 public class ServerPrinter implements Printable{
@@ -32,7 +30,7 @@ public class ServerPrinter implements Printable{
         try {
             out.write(line.getBytes(StandardCharsets.UTF_8));
             out.flush();
-        } catch (SocketException e){
+        } catch (Exception e){
             new Save(Main.collection).execute();
             throw new ServerException();
         }

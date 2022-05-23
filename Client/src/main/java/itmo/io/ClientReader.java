@@ -43,7 +43,7 @@ public class ClientReader implements Scannable{
                     try {
                         size = socketChannel.read(byteBuffer);
                     } catch (Exception e){
-                        System.out.println("СЕРВЕР ЕБНУЛСЯ!!!!");
+                        System.out.println("Server is broken");
                         throw new ServerException();
                     }
                     if (size == -1 || size == 0)

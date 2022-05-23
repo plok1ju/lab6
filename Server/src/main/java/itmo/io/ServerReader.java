@@ -1,17 +1,14 @@
 package itmo.io;
 
 import itmo.Main;
-import itmo.commands.Command;
 import itmo.commands.Save;
-import itmo.exceptions.CollectionException;
 import itmo.exceptions.ServerException;
 import itmo.utils.ConnectionCheck;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
-import java.net.SocketException;
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
 
 public class ServerReader implements Scannable{
 
@@ -31,8 +28,12 @@ public class ServerReader implements Scannable{
         }
         ++lines;
         try {
-            return bufferedInputStream.readLine();
-        } catch (SocketException e){
+            String string = bufferedInputStream.readLine();
+            if (string == null){
+                throw new ServerException();
+            }
+            return string;
+        } catch (Exception e){
             new Save(Main.collection).execute();
             throw new ServerException();
         }
