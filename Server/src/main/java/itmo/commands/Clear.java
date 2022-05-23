@@ -35,7 +35,7 @@ public class Clear implements Command {
     @Override
     public void execute() throws Exception {
         collection.clear();
-        printable.printLine("/noresponse/Коллекция очищена");
+        printable.printLine("Коллекция очищена");
 
     }
 }

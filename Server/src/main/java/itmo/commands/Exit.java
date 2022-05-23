@@ -19,6 +19,7 @@ public class Exit implements Command {
      */
     @Override
     public void execute() throws Exception {
+        Thread.sleep(1000);
         printable.printLine("/exit/");
     }
 

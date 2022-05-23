@@ -44,8 +44,8 @@ public class PrintDescending implements Command {
         for (Integer key : keys) {
             Object o = collection.get(key);
             try {
-                printable.printLine("/noresponse/=====\n");
-                printable.printLine("/noresponse/Ключ элемента " + key + ": " + o + "\n");
+                printable.printLine("=====\n");
+                printable.printLine("Ключ элемента " + key + ": " + o + "\n");
             } catch (ServerException serverException) {
                 throw serverException;
             } catch (Exception e) {

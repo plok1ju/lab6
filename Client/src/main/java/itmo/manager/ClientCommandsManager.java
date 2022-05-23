@@ -1,18 +1,11 @@
 package itmo.manager;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import itmo.exceptions.CollectionException;
-import itmo.exceptions.ServerException;
-import itmo.io.FileScan;
 import itmo.io.Printable;
 import itmo.io.Scannable;
-import itmo.model.Color;
-import itmo.model.builders.DragonBuilder;
 import itmo.utils.CommandArguments;
 import itmo.utils.CommandInfo;
-
-import java.io.IOException;
 
 /**
  * Этот класс определяет команду
@@ -34,29 +27,18 @@ public class ClientCommandsManager {
         return commandInfo;
     }
 
-    private void waitResponseFromServer(Scannable scannable, Scannable clientReader, Printable clientPrinter) throws Exception {
-        while (true){
-            String response = clientReader.scanString();
-            if (response.contains("/exit/"))
-                System.exit(0);
-            if (response.endsWith("/end/")){
-                System.out.println(response.replace("/end/", "").replace("/noresponse/", ""));
-                break;
-            }
-            boolean needSending = !response.contains("/noresponse/");
-            System.out.println(response.replace("/noresponse/", ""));
-            if (needSending) {
-                String send = scannable.scanString();
-                clientPrinter.printLine(send);
-            }
-        }
+    private void waitResponseFromServer(Scannable scannable, Scannable clientReader) throws Exception {
+        String response = clientReader.scanString();
+        if (response.contains("/exit/"))
+            System.exit(0);
+        System.out.println(response);
     }
 
     private void sendArgumentsToServer(CommandArguments commandArguments, Printable clientPrinter, Scannable clientReader, Scannable scannable) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(commandArguments);
         clientPrinter.printLine(json);
-        waitResponseFromServer(scannable, clientReader, clientPrinter);
+        waitResponseFromServer(scannable, clientReader);
     }
 
     public void getCommand(String commandLine, Scannable scannable, Scannable clientReader, Printable clientPrinter, boolean isConsole) throws Exception {
@@ -73,6 +55,6 @@ public class ClientCommandsManager {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(commandArguments);
         clientPrinter.printLine(json);
-        waitResponseFromServer(scannable, clientReader, clientPrinter);
+        waitResponseFromServer(scannable, clientReader);
     }
 }

@@ -7,9 +7,7 @@ import itmo.commands.*;
 import itmo.deserializers.ArgumentsDeserializer;
 import itmo.exceptions.CollectionException;
 import itmo.exceptions.ServerException;
-import itmo.io.FileScan;
-import itmo.io.Printable;
-import itmo.io.Scannable;
+import itmo.io.*;
 import itmo.model.Color;
 import itmo.model.Dragon;
 import itmo.model.builders.DragonBuilder;
@@ -61,15 +59,16 @@ public class CommandsManager {
         String args = serverReader.scanString();
 //        System.out.println("Args: " + args);
         CommandArguments commandArguments = objectMapper.readValue(args, CommandArguments.class);
+        SelfPrint selfPrint = new SelfPrint();
         try {
-            getCommand(commandInfo, commandArguments, serverReader, serverPrinter).execute();
+            getCommand(commandInfo, commandArguments, serverReader, selfPrint).execute();
         } catch (ServerException serverException){
             throw serverException;
         }
         catch (Exception e){
-            serverPrinter.printLine("/noresponse/Что-то не так: " + e.getMessage());
+            selfPrint.printLine("Что-то не так: " + e.getMessage());
         }
-        serverPrinter.printLine("/end/");
+        serverPrinter.printLine(selfPrint.getString());
     }
     public CommandInfo getCommandInfo(String commandName) {
         switch (commandName) {
@@ -328,10 +327,10 @@ public class CommandsManager {
                         throw new CollectionException("Введены не все поля");
                     }
                     Integer key = Integer.parseInt(arrayLine[1]);
-                    DragonBuilder dragonBuilder = new DragonBuilder(isConsole);
+                    Dragon dragon = new DragonBuilder(isConsole).build(scannable, new ConsolePrint());
 
-                    Class[] types = {Integer.class, DragonBuilder.class};
-                    Object[] args = {key, dragonBuilder};
+                    Class[] types = {Integer.class, Dragon.class};
+                    Object[] args = {key, dragon};
 
                     commandArguments.arguments = args;
                     commandArguments.types = types;
@@ -428,10 +427,10 @@ public class CommandsManager {
                     if (arrayLine.length > commandInfo.getSimpleArguments() + 1) {
                         throw new CollectionException("Команда введена некорректно");
                     }
-                    DragonBuilder dragonBuilder = new DragonBuilder(isConsole);
+                    Dragon dragon = new DragonBuilder(isConsole).build(scannable, new ConsolePrint());
 
-                    Object[] args = {dragonBuilder};
-                    Class[] types = {dragonBuilder.getClass()};
+                    Object[] args = {dragon};
+                    Class[] types = {dragon.getClass()};
 
                     commandArguments.arguments = args;
                     commandArguments.types = types;
@@ -443,10 +442,10 @@ public class CommandsManager {
                     if (arrayLine.length < commandInfo.getSimpleArguments() + 1) {
                         throw new CollectionException("Введены не все поля");
                     }
-                    DragonBuilder dragonBuilder = new DragonBuilder(isConsole);
+                    Dragon dragon = new DragonBuilder(isConsole).build(scannable, new ConsolePrint());
                     Integer key = Integer.parseInt(arrayLine[1]);
-                    Object[] args = {key,dragonBuilder};
-                    Class[] types = {key.getClass(), dragonBuilder.getClass()};
+                    Object[] args = {key,dragon};
+                    Class[] types = {key.getClass(), dragon.getClass()};
 
                     commandArguments.arguments = args;
                     commandArguments.types = types;
@@ -457,10 +456,10 @@ public class CommandsManager {
                     if (arrayLine.length < commandInfo.getSimpleArguments() + 1) {
                         throw new CollectionException("Введены не все поля");
                     }
-                    DragonBuilder dragonBuilder = new DragonBuilder(isConsole);
+                    Dragon dragon = new DragonBuilder(isConsole).build(scannable, new ConsolePrint());
                     Long id = Long.parseLong(arrayLine[1]);
-                    Object[] args = {id, dragonBuilder};
-                    Class[] types = {id.getClass(), dragonBuilder.getClass()};
+                    Object[] args = {id, dragon};
+                    Class[] types = {id.getClass(), dragon.getClass()};
 
                     commandArguments.arguments = args;
                     commandArguments.types = types;

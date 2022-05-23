@@ -32,6 +32,7 @@ public class Main {
         ClientCommandsManager clientCommandsManager = new ClientCommandsManager();
         ClientPrinter clientPrinter = new ClientPrinter(clientSocketChannel);
         ClientReader clientReader = new ClientReader(clientSocketChannel);
+        System.out.println(clientReader.scanString());
         ConsoleScan consoleScan = new ConsoleScan();
 
         while (true){
@@ -51,6 +52,7 @@ public class Main {
                 clientSocketChannel.configureBlocking(false);
                 clientPrinter = new ClientPrinter(clientSocketChannel);
                 clientReader = new ClientReader(clientSocketChannel);
+                System.out.println(clientReader.scanString());
 
             }
             catch (Exception e) {

@@ -39,9 +39,9 @@ public class Show implements Command {
         List<?> keys = collection.getKeysAsList();
         for (Object key : keys) {
             try {
-                printable.printLine("/noresponse/=====");
-                printable.printLine("/noresponse/Ключ элемента: " + key + "\n" + collection.get(key).toString());
-                printable.printLine("/noresponse/=====");
+                printable.printLine("=====");
+                printable.printLine("Ключ элемента: " + key + "\n" + collection.get(key).toString());
+                printable.printLine("=====");
             } catch (ServerException serverException) {
                 throw serverException;
             } catch (Exception e) {

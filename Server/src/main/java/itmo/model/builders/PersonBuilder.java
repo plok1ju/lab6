@@ -67,7 +67,7 @@ public class PersonBuilder {
                 throw serverException;
             }
             catch (Exception e) {
-                printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
+                printable.printLine("Что-то пошло не так: " + e.getMessage());
                 this.buildName(scannable, printable);
             }
 
@@ -96,7 +96,7 @@ public class PersonBuilder {
                 throw serverException;
             }
             catch (Exception e) {
-                printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
+                printable.printLine("Что-то пошло не так: " + e.getMessage());
                 this.buildBirthday(scannable, printable);
             }
         } else {
@@ -127,7 +127,7 @@ public class PersonBuilder {
                 throw serverException;
             }
             catch (Exception e) {
-                printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
+                printable.printLine("Что-то пошло не так: " + e.getMessage());
                 this.buildHeight(scannable, printable);
             }
         } else {
@@ -158,7 +158,7 @@ public class PersonBuilder {
                 throw serverException;
             }
             catch (Exception e) {
-                printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
+                printable.printLine("Что-то пошло не так: " + e.getMessage());
                 this.buildPassportID(scannable, printable);
             }
 
@@ -184,7 +184,7 @@ public class PersonBuilder {
                 throw serverException;
             }
             catch (Exception e) {
-                printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
+                printable.printLine("Что-то пошло не так: " + e.getMessage());
                 this.buildNationality(scannable, printable);
             }
         } else {

@@ -34,7 +34,7 @@ public class Info implements Command {
      * Вывод информации о коллекции
      */
     public void execute() throws Exception {
-        printable.printLine("/noresponse/Тип элемента коллекции: " + collection.getClass().getSimpleName() + "\n"
+        printable.printLine("Тип элемента коллекции: " + collection.getClass().getSimpleName() + "\n"
                 + "Дата создания коллекции: " + collection.getDateTime() + "\n"
                 + "Количество элементов: " + collection.size());
     }

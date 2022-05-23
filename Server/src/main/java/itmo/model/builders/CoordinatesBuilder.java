@@ -56,7 +56,7 @@ public class CoordinatesBuilder {
                 Double x = Double.parseDouble(scannable.scanString());
                 coordinates.setX(x);
             } catch (Exception e) {
-                printable.printLine("/noresponse/Что-то не то с координатой х: " + e.getMessage());
+                printable.printLine("Что-то не то с координатой х: " + e.getMessage());
                 this.buildX(scannable, printable);
             }
         } else {
@@ -81,7 +81,7 @@ public class CoordinatesBuilder {
                 throw serverException;
             }
             catch (Exception e) {
-                printable.printLine("/noresponse/Что-то не то с координатой y: " + e.getMessage());
+                printable.printLine("Что-то не то с координатой y: " + e.getMessage());
                 this.buildY(scannable, printable);
             }
         } else {

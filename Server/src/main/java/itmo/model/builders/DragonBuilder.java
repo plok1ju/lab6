@@ -94,7 +94,7 @@ public class DragonBuilder {
                 throw serverException;
             }
             catch (Exception e) {
-                printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
+                printable.printLine("Что-то пошло не так: " + e.getMessage());
                 this.buildName(scannable, printable);
             }
         } else {
@@ -124,7 +124,7 @@ public class DragonBuilder {
                 throw serverException;
             }
             catch (Exception e) {
-                printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
+                printable.printLine("Что-то пошло не так: " + e.getMessage());
                 this.buildAge(scannable, printable);
 
             }
@@ -159,7 +159,7 @@ public class DragonBuilder {
                 throw serverException;
             }
             catch (Exception e) {
-                printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
+                printable.printLine("Что-то пошло не так: " + e.getMessage());
                 this.buildDescription(scannable, printable);
 
             }
@@ -187,7 +187,7 @@ public class DragonBuilder {
                 throw serverException;
             }
             catch (Exception e) {
-                printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
+                printable.printLine("Что-то пошло не так: " + e.getMessage());
                 this.buildColor(scannable, printable);
             }
         } else {
@@ -211,7 +211,7 @@ public class DragonBuilder {
                 throw serverException;
             }
             catch (Exception e) {
-                printable.printLine("/noresponse/Что-то пошло не так: " + e.getMessage());
+                printable.printLine("Что-то пошло не так: " + e.getMessage());
                 this.buildCharacter(scannable, printable);
             }
         } else {
