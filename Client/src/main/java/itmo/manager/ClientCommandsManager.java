@@ -27,18 +27,16 @@ public class ClientCommandsManager {
         return commandInfo;
     }
 
-    private void waitResponseFromServer(Scannable scannable, Scannable clientReader) throws Exception {
+    private void waitResponseFromServer(Scannable clientReader) throws Exception {
         String response = clientReader.scanString();
-        if (response.contains("/exit/"))
-            System.exit(0);
         System.out.println(response);
     }
 
-    private void sendArgumentsToServer(CommandArguments commandArguments, Printable clientPrinter, Scannable clientReader, Scannable scannable) throws Exception {
+    private void sendArgumentsToServer(CommandArguments commandArguments, Printable clientPrinter, Scannable clientReader) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(commandArguments);
         clientPrinter.printLine(json);
-        waitResponseFromServer(scannable, clientReader);
+        waitResponseFromServer(clientReader);
     }
 
     public void getCommand(String commandLine, Scannable scannable, Scannable clientReader, Printable clientPrinter, boolean isConsole) throws Exception {
@@ -49,12 +47,14 @@ public class ClientCommandsManager {
 
         }
         String command = arrayLine[0];
+        if (command.equals("exit"))
+            System.exit(0);
         CommandInfo commandInfo = receiveCommandInfo(command, clientReader, clientPrinter);
         CommandArguments commandArguments = CommandsManager.getCommandArguments(commandLine, commandInfo, scannable, isConsole);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(commandArguments);
         clientPrinter.printLine(json);
-        waitResponseFromServer(scannable, clientReader);
+        waitResponseFromServer(clientReader);
     }
 }

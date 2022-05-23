@@ -28,7 +28,7 @@ public class ServerPrinter implements Printable{
             throw new ServerException();
         }
         try {
-            out.write(line.getBytes(StandardCharsets.UTF_8));
+            out.write(line.concat("\n").getBytes(StandardCharsets.UTF_8));
             out.flush();
         } catch (Exception e){
             new Save(Main.collection).execute();
