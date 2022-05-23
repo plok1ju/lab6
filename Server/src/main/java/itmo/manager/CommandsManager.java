@@ -489,7 +489,10 @@ public class CommandsManager {
                 }
 
             }
-        } catch (Exception e) {
+        } catch (ServerException serverException){
+            throw new ServerException();
+        }
+        catch (Exception e) {
             throw new CollectionException("Ошибка на строчке " + scannable.linesCount() + ": " + e.getMessage());
         }
     }

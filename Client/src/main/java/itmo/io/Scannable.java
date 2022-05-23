@@ -1,5 +1,7 @@
 package itmo.io;
 
+import itmo.exceptions.ServerException;
+
 import java.io.IOException;
 
 /**
@@ -12,7 +14,7 @@ public interface Scannable {
      *
      * @return scanString
      */
-    String scanString() throws IOException;
+    String scanString() throws IOException, ServerException;
 
     /**
      * Возвращает наличие строки

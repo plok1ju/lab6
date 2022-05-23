@@ -3,6 +3,7 @@ package itmo.manager;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import itmo.exceptions.CollectionException;
+import itmo.exceptions.ServerException;
 import itmo.io.FileScan;
 import itmo.io.Printable;
 import itmo.io.Scannable;
@@ -23,7 +24,7 @@ public class ClientCommandsManager {
     public ClientCommandsManager() {
     }
 
-    private CommandInfo receiveCommandInfo(String commandName, Scannable clientReader, Printable clientPrinter) throws IOException, CollectionException {
+    private CommandInfo receiveCommandInfo(String commandName, Scannable clientReader, Printable clientPrinter) throws Exception {
         clientPrinter.printLine(commandName);
         String json = clientReader.scanString();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -33,7 +34,7 @@ public class ClientCommandsManager {
         return commandInfo;
     }
 
-    private void waitResponseFromServer(Scannable scannable, Scannable clientReader, Printable clientPrinter) throws IOException {
+    private void waitResponseFromServer(Scannable scannable, Scannable clientReader, Printable clientPrinter) throws Exception {
         while (true){
             String response = clientReader.scanString();
             if (response.contains("/exit/"))
@@ -51,7 +52,7 @@ public class ClientCommandsManager {
         }
     }
 
-    private void sendArgumentsToServer(CommandArguments commandArguments, Printable clientPrinter, Scannable clientReader, Scannable scannable) throws IOException {
+    private void sendArgumentsToServer(CommandArguments commandArguments, Printable clientPrinter, Scannable clientReader, Scannable scannable) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(commandArguments);
         clientPrinter.printLine(json);

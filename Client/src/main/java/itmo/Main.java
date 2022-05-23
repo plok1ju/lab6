@@ -1,5 +1,6 @@
 package itmo;
 
+import itmo.exceptions.ServerException;
 import itmo.io.ClientPrinter;
 import itmo.io.ClientReader;
 import itmo.io.ConsoleScan;
@@ -31,34 +32,31 @@ public class Main {
         ClientCommandsManager clientCommandsManager = new ClientCommandsManager();
         ClientPrinter clientPrinter = new ClientPrinter(clientSocketChannel);
         ClientReader clientReader = new ClientReader(clientSocketChannel);
-        getCommand(clientCommandsManager, scannable, clientPrinter, clientReader);
+        ConsoleScan consoleScan = new ConsoleScan();
 
-        clientSocketChannel.close();
-    }
-
-    private static void getCommand(ClientCommandsManager clientCommandsManager, Scannable consoleScan, ClientPrinter clientPrinter, ClientReader clientReader) throws Exception {
-        try {
-            System.out.println("Введите команду: ");
-
-            clientCommandsManager.getCommand(consoleScan.scanString(), consoleScan, clientReader, clientPrinter, true);
-
-        } catch (Exception e) {
-            System.out.println("Что-то пошло не так: " + e.getMessage());
-        }
-        getCommand(clientCommandsManager, consoleScan, clientPrinter, clientReader);
-    }
-
-    private static void sendMessage(SocketChannel clientSocketChannel) throws IOException {
-        Scanner scanner = new Scanner(System.in);
-        ClientPrinter clientPrinter = new ClientPrinter(clientSocketChannel);
         while (true){
-            if (!scanner.hasNext()){
-                System.exit(1);
+            try {
+                System.out.println("Введите команду: ");
+                clientCommandsManager.getCommand(consoleScan.scanString(), consoleScan, clientReader, clientPrinter, true);
+
+            } catch (ServerException serverException){
+                clientSocketChannel.close();
+                try {
+                    clientSocketChannel = SocketChannel.open(new InetSocketAddress("localhost", 8181));
+                } catch (Exception e){
+                    System.out.println("Cannot connect to the server");
+                    continue;
+                }
+                System.out.println("Connection restored!");
+                clientSocketChannel.configureBlocking(false);
+                clientPrinter = new ClientPrinter(clientSocketChannel);
+                clientReader = new ClientReader(clientSocketChannel);
+
             }
-            String message = scanner.nextLine();
-            clientPrinter.printLine(message);
-            if (message.equals("exit"))
-                break;
+            catch (Exception e) {
+                System.out.println("Что-то пошло не так: " + e.getMessage());
+            }
         }
     }
+
 }

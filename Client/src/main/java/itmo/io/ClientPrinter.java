@@ -1,5 +1,7 @@
 package itmo.io;
 
+import itmo.exceptions.ServerException;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -17,13 +19,13 @@ public class ClientPrinter implements Printable{
 
 
     @Override
-    public void printLine(String line) throws IOException {
+    public void printLine(String line) throws Exception {
         try {
             socketChannel.write(ByteBuffer.wrap(line.concat("\n").getBytes(StandardCharsets.UTF_8)));
             socketChannel.socket().getOutputStream().flush();
         } catch (Exception e){
             System.out.println("СЕРВЕР ЕБНУЛСЯ!!!!");
-            System.exit(1);
+            throw new ServerException();
         }
     }
 

@@ -1,5 +1,7 @@
 package itmo.io;
 
+import itmo.exceptions.ServerException;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
@@ -21,7 +23,7 @@ public class ClientReader implements Scannable{
 
     }
     @Override
-    public String scanString() throws IOException {
+    public String scanString() throws IOException, ServerException {
         while (true){
             selector.select();
             Set<SelectionKey> selectionKeys = selector.selectedKeys();
@@ -42,7 +44,7 @@ public class ClientReader implements Scannable{
                         size = socketChannel.read(byteBuffer);
                     } catch (Exception e){
                         System.out.println("СЕРВЕР ЕБНУЛСЯ!!!!");
-                        System.exit(1);
+                        throw new ServerException();
                     }
                     if (size == -1 || size == 0)
                         return "";
