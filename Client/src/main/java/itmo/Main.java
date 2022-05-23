@@ -42,11 +42,15 @@ public class Main {
 
             } catch (ServerException serverException){
                 clientSocketChannel.close();
-                try {
-                    clientSocketChannel = SocketChannel.open(new InetSocketAddress("localhost", 8181));
-                } catch (Exception e){
-                    System.out.println("Cannot connect to the server");
-                    continue;
+                while (true) {
+                    try {
+                        Thread.sleep(10000);
+                        clientSocketChannel = SocketChannel.open(new InetSocketAddress("localhost", 8181));
+                    } catch (Exception e) {
+                        System.out.println("Cannot connect to the server");
+                        continue;
+                    }
+                    break;
                 }
                 System.out.println("Connection restored!");
                 clientSocketChannel.configureBlocking(false);
