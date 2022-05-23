@@ -69,9 +69,9 @@ public class ExecuteScript implements Command {
             }
         } catch (Exception e) {
 //            printable.printLine(fileName + ": " + e.getMessage());
-            FilesHistory.getInstance().removeFile(new File(fileContent));
+            FilesHistory.getInstance().removeFile(new File(fileName));
             throw new CollectionException(fileName + ": " + e.getMessage() + "\n");
         }
-        FilesHistory.getInstance().removeFile(new File(fileContent));
+        FilesHistory.getInstance().removeFile(new File(fileName));
     }
 }
