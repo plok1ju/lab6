@@ -4,7 +4,7 @@ import itmo.io.ClientPrinter;
 import itmo.io.ClientReader;
 import itmo.io.ConsoleScan;
 import itmo.io.Scannable;
-import itmo.manager.CommandsManager;
+import itmo.manager.ClientCommandsManager;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -28,24 +28,24 @@ public class Main {
         SelectionKey selectionKey = clientSocketChannel.register(selector, ops, null);
 
         Scannable scannable = new ConsoleScan();
-        CommandsManager commandsManager = new CommandsManager();
+        ClientCommandsManager clientCommandsManager = new ClientCommandsManager();
         ClientPrinter clientPrinter = new ClientPrinter(clientSocketChannel);
         ClientReader clientReader = new ClientReader(clientSocketChannel);
-        getCommand(commandsManager, scannable, clientPrinter, clientReader);
+        getCommand(clientCommandsManager, scannable, clientPrinter, clientReader);
 
         clientSocketChannel.close();
     }
 
-    private static void getCommand(CommandsManager commandsManager, Scannable consoleScan, ClientPrinter clientPrinter, ClientReader clientReader) throws Exception {
+    private static void getCommand(ClientCommandsManager clientCommandsManager, Scannable consoleScan, ClientPrinter clientPrinter, ClientReader clientReader) throws Exception {
         try {
             System.out.println("Введите команду: ");
 
-            commandsManager.getCommand(consoleScan.scanString(), consoleScan, clientReader, clientPrinter, true);
+            clientCommandsManager.getCommand(consoleScan.scanString(), consoleScan, clientReader, clientPrinter, true);
 
         } catch (Exception e) {
             System.out.println("Что-то пошло не так: " + e.getMessage());
         }
-        getCommand(commandsManager, consoleScan, clientPrinter, clientReader);
+        getCommand(clientCommandsManager, consoleScan, clientPrinter, clientReader);
     }
 
     private static void sendMessage(SocketChannel clientSocketChannel) throws IOException {

@@ -63,18 +63,12 @@ public class ExecuteScript implements Command {
         FilesHistory.getInstance().addHistory(new File(fileName));
 
         try {
-
-            //String commandLine = scannable.scanString();
-            while (true) {
-
-                //Command command = commandsManager.getCommand(commandLine, scannable, false);
-                commandsManager.sendCommandInfo(scannable, printable, false);
-                //Thread.sleep(100);
-                //commandLine = scannable.scanString();
+            for (Command command : commandsManager.getCommandsFromFile(scannable, printable)) {
+                command.execute();
             }
         } catch (Exception e) {
-            System.out.println(fileName + ": " + e.getMessage());
-//            throw new CollectionException(fileName + ": " + e.getMessage() + "\n");
+//            System.out.println(fileName + ": " + e.getMessage());
+            throw new CollectionException(fileName + ": " + e.getMessage() + "\n");
 
         }
         FilesHistory.getInstance().removeFile(new File(fileName));

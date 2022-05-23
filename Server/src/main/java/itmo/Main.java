@@ -1,8 +1,6 @@
 package itmo;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import itmo.collection.HashTableCollection;
-import itmo.exceptions.CollectionException;
 import itmo.exceptions.ServerException;
 import itmo.io.Scannable;
 import itmo.io.ServerPrinter;
@@ -11,7 +9,6 @@ import itmo.manager.CommandsManager;
 import itmo.manager.file.ReaderXml;
 import itmo.model.Dragon;
 
-import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
@@ -39,7 +36,7 @@ public class Main {
         CommandsManager commandsManager = new CommandsManager(collection);
         while (true){
             try {
-                commandsManager.sendCommandInfo(serverReader, serverPrinter, true);
+                commandsManager.sendCommandInfo(serverReader, serverPrinter);
             } catch (ServerException serverException){
                 client.close();
                 client = serverSocket.accept();

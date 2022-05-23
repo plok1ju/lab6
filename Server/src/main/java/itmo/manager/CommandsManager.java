@@ -9,7 +9,9 @@ import itmo.exceptions.CollectionException;
 import itmo.exceptions.ServerException;
 import itmo.io.Printable;
 import itmo.io.Scannable;
+import itmo.model.Color;
 import itmo.model.Dragon;
+import itmo.model.builders.DragonBuilder;
 import itmo.utils.CommandArguments;
 import itmo.utils.CommandInfo;
 
@@ -37,7 +39,7 @@ public class CommandsManager {
         this.collection = collection;
     }
 
-    public void sendCommandInfo(Scannable serverReader, Printable serverPrinter, boolean isConsole) throws Exception {
+    public void sendCommandInfo(Scannable serverReader, Printable serverPrinter) throws Exception {
         String commandName = serverReader.scanString();
         CommandInfo commandInfo = getCommandInfo(commandName);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -57,7 +59,7 @@ public class CommandsManager {
         System.out.println("Args: " + args);
         CommandArguments commandArguments = objectMapper.readValue(args, CommandArguments.class);
         try {
-            getCommand(commandInfo, commandArguments, serverReader, serverPrinter, isConsole).execute();
+            getCommand(commandInfo, commandArguments, serverReader, serverPrinter).execute();
         } catch (ServerException serverException){
             throw serverException;
         }
@@ -147,10 +149,9 @@ public class CommandsManager {
      * Метод определяющий команду
      *
      * @param scannable   - значение поля scannable
-     * @param isConsole   - значение поля isConsole
      * @return - введенная команда
      */
-    public Command getCommand(CommandInfo commandInfo, CommandArguments commandArguments, Scannable scannable, Printable printable, boolean isConsole) throws Exception {
+    public Command getCommand(CommandInfo commandInfo, CommandArguments commandArguments, Scannable scannable, Printable printable) throws Exception {
         try {
             switch (commandInfo.getName()) {
                 case "clear": {
@@ -274,5 +275,233 @@ public class CommandsManager {
         } catch (Exception e) {
             throw new CollectionException("Ошибка на строчке " + scannable.linesCount() + ": " + e.getMessage());
         }
+    }
+
+    /**
+     * Метод определяющий команду
+     *
+     * @param commandLine - значение поля commandLine
+     * @param scannable   - значение поля scannable
+     * @param isConsole   - значение поля isConsole
+     * @return - введенная команда
+     */
+    public static CommandArguments getCommandArguments(String commandLine, CommandInfo commandInfo, Scannable scannable, boolean isConsole) throws Exception {
+        try {
+            String[] arrayLine = commandLine.trim().replaceAll("\\s+", " ").split(" ");
+
+            if (arrayLine.length == 0) {
+                throw new CollectionException("Нет команд");
+
+            }
+            CommandArguments commandArguments = new CommandArguments();
+            switch (commandInfo.getName()) {
+                case "clear": {
+                    if (arrayLine.length > commandInfo.getSimpleArguments() + 1) {
+                        throw new CollectionException("Команда введена некорректно");
+                    }
+
+                    return commandArguments;
+                }
+
+                case "show": {
+                    if (arrayLine.length > commandInfo.getSimpleArguments() + 1) {
+                        throw new CollectionException("Команда введена некорректно");
+                    }
+
+                    return commandArguments;
+                }
+
+                case "info": {
+                    if (arrayLine.length > commandInfo.getSimpleArguments() + 1) {
+                        throw new CollectionException("Команда введена некорректно");
+                    }
+
+                    return commandArguments;
+                }
+
+                case "insert": {
+
+                    if (arrayLine.length < commandInfo.getSimpleArguments() + 1) {
+                        throw new CollectionException("Введены не все поля");
+                    }
+                    Integer key = Integer.parseInt(arrayLine[1]);
+                    DragonBuilder dragonBuilder = new DragonBuilder(isConsole);
+
+                    Class[] types = {Integer.class, DragonBuilder.class};
+                    Object[] args = {key, dragonBuilder};
+
+                    commandArguments.arguments = args;
+                    commandArguments.types = types;
+                    return commandArguments;
+                }
+
+                case "exit": {
+                    if (arrayLine.length > commandInfo.getSimpleArguments() + 1) {
+                        throw new CollectionException("Команда введена некорректно");
+                    }
+
+                    return commandArguments;
+                }
+
+                case "help": {
+                    if (arrayLine.length > commandInfo.getSimpleArguments() + 1) {
+                        throw new CollectionException("Команда введена некорректно");
+                    }
+
+                    return commandArguments;
+                }
+
+                case "print_descending": {
+                    if (arrayLine.length > commandInfo.getSimpleArguments() + 1) {
+                        throw new CollectionException("Команда введена некорректно");
+                    }
+
+                    return commandArguments;
+                }
+
+                case "remove_all_by_color": {
+
+                    if (arrayLine.length < commandInfo.getSimpleArguments() + 1) {
+                        throw new CollectionException("Введены не все поля");
+                    }
+                    Color color = Color.parse(arrayLine[1]);
+
+                    Object[] args = {color};
+                    Class[] types = {Color.class};
+
+                    commandArguments.arguments = args;
+                    commandArguments.types = types;
+                    return commandArguments;
+                }
+
+                case "remove_greater_key": {
+
+                    if (arrayLine.length < commandInfo.getSimpleArguments() + 1) {
+                        throw new CollectionException("Введены не все поля");
+                    }
+                    Integer key = Integer.parseInt(arrayLine[1]);
+
+                    Object[] args = {key};
+                    Class[] types = {key.getClass()};
+
+                    commandArguments.arguments = args;
+                    commandArguments.types = types;
+                    return commandArguments;
+                }
+
+                case "remove_key": {
+
+                    if (arrayLine.length < commandInfo.getSimpleArguments() + 1) {
+                        throw new CollectionException("Введены не все поля");
+                    }
+                    Integer key = Integer.parseInt(arrayLine[1]);
+
+                    Object[] args = {key};
+                    Class[] types = {key.getClass()};
+
+                    commandArguments.arguments = args;
+                    commandArguments.types = types;
+                    return commandArguments;
+                }
+
+                case "save": {
+                    if (arrayLine.length > commandInfo.getSimpleArguments() + 1) {
+                        throw new CollectionException("Команда введена некорректно");
+                    }
+
+                    return commandArguments;
+                }
+
+                case "sum_of_age": {
+                    if (arrayLine.length > commandInfo.getSimpleArguments() + 1) {
+                        throw new CollectionException("Команда введена некорректно");
+                    }
+
+                    return commandArguments;
+                }
+
+
+                case "remove_lower": {
+                    if (arrayLine.length > commandInfo.getSimpleArguments() + 1) {
+                        throw new CollectionException("Команда введена некорректно");
+                    }
+                    DragonBuilder dragonBuilder = new DragonBuilder(isConsole);
+
+                    Object[] args = {dragonBuilder};
+                    Class[] types = {dragonBuilder.getClass()};
+
+                    commandArguments.arguments = args;
+                    commandArguments.types = types;
+                    return commandArguments;
+                }
+
+                case "replace_if_lower": {
+
+                    if (arrayLine.length < commandInfo.getSimpleArguments() + 1) {
+                        throw new CollectionException("Введены не все поля");
+                    }
+                    DragonBuilder dragonBuilder = new DragonBuilder(isConsole);
+                    Integer key = Integer.parseInt(arrayLine[1]);
+                    Object[] args = {key,dragonBuilder};
+                    Class[] types = {key.getClass(), dragonBuilder.getClass()};
+
+                    commandArguments.arguments = args;
+                    commandArguments.types = types;
+                    return commandArguments;
+                }
+
+                case "update": {
+                    if (arrayLine.length < commandInfo.getSimpleArguments() + 1) {
+                        throw new CollectionException("Введены не все поля");
+                    }
+                    DragonBuilder dragonBuilder = new DragonBuilder(isConsole);
+                    Long id = Long.parseLong(arrayLine[1]);
+                    Object[] args = {id, dragonBuilder};
+                    Class[] types = {id.getClass(), dragonBuilder.getClass()};
+
+                    commandArguments.arguments = args;
+                    commandArguments.types = types;
+                    return commandArguments;
+
+                }
+                case "execute_script": {
+
+                    if (arrayLine.length < commandInfo.getSimpleArguments() + 1) {
+                        throw new CollectionException("Введены не все поля");
+                    }
+                    String nameFile = arrayLine[1];
+                    Object[] args = {nameFile};
+                    Class[] types = {String.class};
+                    commandArguments.arguments = args;
+                    commandArguments.types = types;
+                    return commandArguments;
+                }
+                default: {
+                    throw new CollectionException("Такой команды нет :(");
+                }
+
+            }
+        } catch (Exception e) {
+            throw new CollectionException("Ошибка на строчке " + scannable.linesCount() + ": " + e.getMessage());
+        }
+    }
+
+    public List<Command> getCommandsFromFile(Scannable fileScan, Printable serverPrint) throws Exception {
+        List<Command> commands = new ArrayList<>();
+        while (fileScan.hasNextLine()){
+            String line = fileScan.scanString();
+            String[] words = line.trim().split(" ");
+            if (words.length < 1)
+                continue;
+            CommandInfo commandInfo = getCommandInfo(words[0]);
+            if (!commandInfo.isStatus())
+                throw new CollectionException("Ошибка при парсинге команды " + words[0]);
+
+            CommandArguments commandArguments = getCommandArguments(line, commandInfo, fileScan, false);
+            Command command = getCommand(commandInfo, commandArguments,fileScan, serverPrint);
+            commands.add(command);
+        }
+
+        return commands;
     }
 }
