@@ -48,7 +48,7 @@ public class ServerRunner implements Runnable{
                     serverPrinter = new ServerPrinter(client);
                     serverPrinter.printLine(greeting);
                 } catch (Exception e){
-                    System.out.println(e.getMessage());
+//                    System.out.println(e.getMessage());
                 }
             }
         } catch (Exception e){

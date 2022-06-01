@@ -57,6 +57,8 @@ public class CommandsManager {
         objectMapper.registerModule(module);
 
         String args = serverReader.scanString();
+        if (args.equals("/error/"))
+            throw new CollectionException();
 //        System.out.println("Args: " + args);
         CommandArguments commandArguments = objectMapper.readValue(args, CommandArguments.class);
         SelfPrint selfPrint = new SelfPrint();

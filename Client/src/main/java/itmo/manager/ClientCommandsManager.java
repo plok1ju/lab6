@@ -2,6 +2,7 @@ package itmo.manager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import itmo.exceptions.CollectionException;
+import itmo.exceptions.ServerException;
 import itmo.io.Printable;
 import itmo.io.Scannable;
 import itmo.utils.CommandArguments;
@@ -50,8 +51,16 @@ public class ClientCommandsManager {
         if (command.equals("exit"))
             System.exit(0);
         CommandInfo commandInfo = receiveCommandInfo(command, clientReader, clientPrinter);
-        CommandArguments commandArguments = CommandsManager.getCommandArguments(commandLine, commandInfo, scannable, isConsole);
 
+        CommandArguments commandArguments = null;
+        try {
+            commandArguments = CommandsManager.getCommandArguments(commandLine, commandInfo, scannable, isConsole);
+        } catch (ServerException serverException){
+            throw serverException;
+        } catch (Exception e){
+            clientPrinter.printLine("/error/");
+            throw e;
+        }
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(commandArguments);
         clientPrinter.printLine(json);
