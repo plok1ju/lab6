@@ -9,6 +9,7 @@ import itmo.manager.ClientCommandsManager;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
@@ -18,8 +19,20 @@ public class Main {
     public static void main(String[] args) throws Exception {
         Selector selector = Selector.open();
         SocketChannel clientSocketChannel = null;
+        int port = 0;
+        while (true) {
+            System.out.println("Введите порт:");
+            try {
+                port = new Scanner(System.in).nextInt();
+            } catch (Exception e) {
+                System.out.println("Введите число");
+                continue;
+            }
+            break;
+        }
+
         try {
-            clientSocketChannel = SocketChannel.open(new InetSocketAddress("localhost", 8181));
+            clientSocketChannel = SocketChannel.open(new InetSocketAddress("localhost", port));
         } catch (Exception e){
             System.out.println("Cannot connect to the server");
             System.exit(1);
@@ -45,7 +58,7 @@ public class Main {
                 while (true) {
                     try {
                         Thread.sleep(10000);
-                        clientSocketChannel = SocketChannel.open(new InetSocketAddress("localhost", 8181));
+                        clientSocketChannel = SocketChannel.open(new InetSocketAddress("localhost", port));
                     } catch (Exception e) {
                         System.out.println("Cannot connect to the server");
                         continue;
@@ -61,6 +74,7 @@ public class Main {
             }
             catch (Exception e) {
                 System.out.println("Что-то пошло не так: " + e.getMessage());
+
             }
         }
     }
