@@ -86,7 +86,6 @@ public class Main {
         Thread[] threads = new Thread[50];
         for (int i = 0; i < serverSockets.length; i++) {
             try {
-                freePorts.add(8000 + i);
                 serverSockets[i] = new ServerSocket(8000 + i);
             } catch (Throwable t){
                 System.out.println(i);

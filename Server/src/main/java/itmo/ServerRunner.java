@@ -5,7 +5,6 @@ import itmo.io.Scannable;
 import itmo.io.ServerPrinter;
 import itmo.io.ServerReader;
 import itmo.manager.CommandsManager;
-import itmo.manager.file.ReaderXml;
 
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -27,7 +26,6 @@ public class ServerRunner implements Runnable{
 
         try {
             Socket client = serverSocket.accept();
-            Main.freePorts.remove(Integer.valueOf(serverSocket.getLocalPort()));
             System.out.println("Connection");
             Scanner sc = new Scanner(System.in);
             Scannable serverReader = new ServerReader(client);
@@ -40,9 +38,7 @@ public class ServerRunner implements Runnable{
                     commandsManager.sendCommandInfo(serverReader, serverPrinter);
                 } catch (ServerException serverException) {
                     client.close();
-                    Main.freePorts.add(serverSocket.getLocalPort());
                     client = serverSocket.accept();
-                    Main.freePorts.remove(Integer.valueOf(serverSocket.getLocalPort()));
                     System.out.println("Connection");
                     serverReader = new ServerReader(client);
                     serverPrinter = new ServerPrinter(client);
