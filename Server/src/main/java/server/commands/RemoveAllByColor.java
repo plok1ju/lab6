@@ -1,0 +1,48 @@
+package server.commands;
+
+import server.collection.HashTableCollection;
+import server.model.Color;
+import server.model.Colorable;
+
+import java.util.List;
+
+/**
+ * Класс отвечает за удаление элементов по цвету
+ */
+public class RemoveAllByColor implements Command {
+
+    /**
+     * Поле collection
+     * {@link HashTableCollection}
+     */
+    private final HashTableCollection<?, ? extends Colorable> collection;
+
+    /**
+     * Поле collection
+     * {@link Color}
+     */
+    private final Color color;
+
+    /**
+     * Конструктор класса RemoveAllByColor
+     *
+     * @param collection - Поле collection
+     * @param color      - Поле color
+     */
+    public RemoveAllByColor(Color color, HashTableCollection<?, ? extends Colorable> collection) {
+        this.collection = collection;
+        this.color = color;
+    }
+
+    /**
+     * Переопределение метода execute
+     * Удаление элементов из коллекции по цвету
+     */
+    @Override
+    public void execute() {
+        List<?> keys = collection.getKeysAsList();
+        keys.stream().filter(key -> collection.get(key).getColor().equals(color)).forEach(collection::remove); // берет поток всех ключей, оставляет только нужные, и пробегается и удаляет
+    }
+
+
+}
