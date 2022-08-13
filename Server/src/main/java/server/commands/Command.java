@@ -1,11 +1,20 @@
 package server.commands;
 
+import server.io.Printable;
+import server.utils.Response;
+
+import java.util.List;
+
 /**
  * Интерфейс объекта, который отвечает за выполнение команд
  */
-public interface Command {
+public abstract class Command {
     /**
      * Обеспечивает выполнение команд
      */
-    void execute() throws Exception;
+    public abstract void execute(List<Object> args, Response response) throws Exception;
+
+    public String getName(){
+        return getClass().getSimpleName();
+    }
 }

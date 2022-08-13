@@ -5,6 +5,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import server.Main;
 import server.collection.HashTableCollection;
 import server.exceptions.CollectionException;
 import server.manager.FileManager;
@@ -17,21 +18,19 @@ import java.io.File;
  * Этот класс записывает коллекцию в файл
  */
 public class FileSaver {
-    Logger log = LoggerFactory.getLogger(FileSaver.class);
     /**
      * Метод отвечает за сохранение коллекции в файл xml
      *
      * @param dragons
      */
     public void saveInfo(HashTableCollection<Integer, Dragon> dragons) throws Exception {
-
         FileManager fileManager = new FileManager();
         File file = fileManager.getFile();
         if (!file.exists()){
             file.createNewFile();
         }
         if (!file.canWrite()) {
-            log.error("Файл закрыт для чтения");
+            Main.log.error("Файл закрыт для чтения");
             throw new CollectionException("Похоже файл закрыт для записи");
         }
         HashTableCollectSerializer serializer = new HashTableCollectSerializer(dragons);

@@ -1,5 +1,7 @@
 package server.io;
 
+import server.utils.CommandInfo;
+
 import java.io.IOException;
 
 /**
@@ -12,7 +14,7 @@ public interface Scannable {
      *
      * @return scanString
      */
-    String scanString() throws Exception;
+    CommandInfo scan() throws Exception;
 
     /**
      * Возвращает наличие строки

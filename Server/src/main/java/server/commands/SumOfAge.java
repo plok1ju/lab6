@@ -1,48 +1,29 @@
 package server.commands;
 
+import server.Main;
 import server.collection.HashTableCollection;
 import server.io.Printable;
 import server.model.Ageable;
+import server.utils.Response;
 
 import java.util.List;
 
 /**
  * Класс отвечает за вывод суммы полей age драконов
  */
-public class SumOfAge implements Command {
-
-    /**
-     * Поле collection
-     * {@link HashTableCollection}
-     */
-    private final HashTableCollection<?, ? extends Ageable> collection;
-    private final Printable printable;
-
-    /**
-     * Поле sumAge
-     */
-    private Integer sumAge = 0;
-
-    /**
-     * Конструктор класса SumOfAge
-     *
-     * @param collection - Поле collection
-     * @param printable
-     */
-    public SumOfAge(HashTableCollection<?, ? extends Ageable> collection, Printable printable) {
-        this.collection = collection;
-        this.printable = printable;
-    }
+public class SumOfAge extends Command {
 
     /**
      * Переопределение метода execute
      * Вывод суммы полей age всех элементов коллекции
      */
+    int sumAge = 0;
     @Override
-    public void execute() throws Exception {
-        List<?> keys = collection.getKeysAsList();
-        keys.forEach(key -> sumAge += (collection.get(key).getAge() == null ? 0 : collection.get(key).getAge()));
-        printable.printLine("/Сумма возрастов: " + sumAge);
+    public void execute(List<Object> args, Response response) throws Exception {
+        List<?> keys = Main.collection.getKeysAsList();
+
+        keys.forEach(key -> sumAge += (Main.collection.get(key).getAge() == null ? 0 : Main.collection.get(key).getAge()));
+        response.Add("/Сумма возрастов: " + sumAge);
 
     }
 

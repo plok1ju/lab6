@@ -1,6 +1,7 @@
 package server.io;
 
 import server.exceptions.ServerException;
+import server.utils.CommandInfo;
 import server.utils.ConnectionCheck;
 
 import java.io.BufferedReader;
@@ -10,8 +11,8 @@ import java.net.Socket;
 
 public class ServerReader implements Scannable{
 
-    private BufferedReader bufferedInputStream;
-    private Socket clientSocket;
+    private final BufferedReader bufferedInputStream;
+    private final Socket clientSocket;
     private int lines = 0;
 
     public ServerReader(Socket clientSocket) throws Exception {
@@ -19,9 +20,8 @@ public class ServerReader implements Scannable{
         this.clientSocket = clientSocket;
     }
     @Override
-    public String scanString() throws Exception {
+    public CommandInfo scan() throws Exception {
         if (!ConnectionCheck.isConnected(clientSocket)){
-
             throw new ServerException();
         }
         ++lines;
@@ -30,7 +30,7 @@ public class ServerReader implements Scannable{
             if (string == null){
                 throw new ServerException();
             }
-            return string;
+            return null;
         } catch (Exception e){
 
             throw new ServerException();

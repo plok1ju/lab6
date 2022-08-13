@@ -1,10 +1,10 @@
 package server.commands;
 
-import server.collection.HashTableCollection;
+import server.Main;
 import server.exceptions.CollectionException;
 import server.io.Printable;
-import server.io.Scannable;
 import server.model.Dragon;
+import server.utils.Response;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,62 +13,27 @@ import java.util.stream.Stream;
 /**
  * Класс отвечает за обновление полей элемента коллекции по id
  */
-public class UpdateId implements Command {
-
-    /**
-     * Поле collection
-     * {@link HashTableCollection}
-     */
-    private final HashTableCollection<Integer, Dragon> collection;
-
-    /**
-     * Поле id
-     */
-    private final Long id;
-
-    /**
-     * Поле dragon
-     * {@link Dragon}
-     */
-    private final Dragon dragon;
-    private final Scannable scannable;
-    private final Printable printable;
-
-    /**
-     * Конструктор класса UpdateId
-     *
-     * @param collection    - Поле collection
-     * @param id            - Поле id
-     * @param dragon - Поле dragonBuilder
-     * @param scannable
-     * @param printable
-     */
-    public UpdateId(Long id, Dragon dragon, HashTableCollection<Integer, Dragon> collection, Scannable scannable, Printable printable) {
-        this.collection = collection;
-        this.id = id;
-        this.dragon = dragon;
-        this.scannable = scannable;
-        this.printable = printable;
-    }
+public class UpdateId extends Command {
 
     /**
      * Переопределение метода execute
      * Обновление элемента по id
      */
     @Override
-    public void execute() throws Exception {
-        List<Integer> keys = collection.getKeysAsList();
-        Stream<Integer> integerStream = keys.stream().filter(key -> id.equals(collection.get(key).getId()));
+    public void execute(List<Object> args, Response response) throws Exception {
+        Long id = (Long) args.get(0);
+        List<Integer> keys = Main.collection.getKeysAsList();
+        Stream<Integer> integerStream = keys.stream().filter(key -> id.equals(Main.collection.get(key).getId()));
         Optional<Integer> optionalKey = integerStream.findAny();
         if (!optionalKey.isPresent()) {
             throw new CollectionException("Нет такого id");
         }
-        Dragon dragon = this.dragon;
-        dragon.setId(this.id);
+        Dragon dragon = (Dragon) args.get(1);
+        dragon.setId(id);
         Integer dragonKey = optionalKey.get();
-        keys.stream().filter(key -> id.equals(collection.get(key).getId())).forEach(collection::remove);
+        keys.stream().filter(key -> id.equals(Main.collection.get(key).getId())).forEach(Main.collection::remove);
 
-        collection.put(dragonKey, dragon);
+        Main.collection.put(dragonKey, dragon);
 
     }
 }

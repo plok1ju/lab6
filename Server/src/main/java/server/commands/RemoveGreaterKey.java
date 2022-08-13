@@ -1,6 +1,9 @@
 package server.commands;
 
+import server.Main;
 import server.collection.HashTableCollection;
+import server.io.Printable;
+import server.utils.Response;
 
 import java.util.List;
 
@@ -8,38 +11,16 @@ import java.util.List;
  * Класс отвечает за удаление элементов по значению ключа
  * Если ключ превышает поле key
  */
-public class RemoveGreaterKey implements Command {
-
-    /**
-     * Поле collection
-     * {@link HashTableCollection}
-     */
-    private final HashTableCollection<? extends Integer, ?> collection;
-
-    /**
-     * Поле key
-     */
-    private final Integer key;
-
-    /**
-     * Конструктор класса RemoveGreaterKey
-     *
-     * @param collection - Поле collection
-     * @param key        - Поле key
-     */
-    public RemoveGreaterKey(Integer key, HashTableCollection<? extends Integer, ?> collection) {
-        this.collection = collection;
-        this.key = key;
-    }
-
+public class RemoveGreaterKey extends Command {
     /**
      * Переопределение метода execute
      * Удаление элементов из коллекции если их ключ превышает поле key
      */
     @Override
-    public void execute() {
-        List<? extends Integer> keys = collection.getKeysAsList();
-        keys.stream().filter(keyInKeys -> keyInKeys.compareTo(this.key) > 0).forEach(collection::remove);
+    public void execute(List<Object> args, Response response) {
+        Integer key = (Integer) args.get(0);
+        List<? extends Integer> keys = Main.collection.getKeysAsList();
+        keys.stream().filter(keyInKeys -> keyInKeys.compareTo(key) > 0).forEach(Main.collection::remove);
 
     }
 

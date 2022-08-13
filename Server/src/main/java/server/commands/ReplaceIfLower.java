@@ -1,52 +1,20 @@
 package server.commands;
 
+import server.Main;
 import server.collection.HashTableCollection;
 import server.io.Printable;
 import server.io.Scannable;
 import server.model.Dragon;
 import server.model.builders.DragonBuilder;
+import server.utils.Response;
+
+import java.util.List;
 
 /**
  * Класс отвечает за замену элемента по ключу
  * Если значение нового элемента меньше старого
  */
-public class ReplaceIfLower implements Command {
-
-    /**
-     * Поле collection
-     * {@link HashTableCollection}
-     */
-    private final HashTableCollection<Integer, Dragon> collection;
-
-    /**
-     * Поле key
-     */
-    private final Integer key;
-
-    /**
-     * Поле dragonBuilder
-     * {@link DragonBuilder}
-     */
-    private final DragonBuilder dragonBuilder;
-    private final Scannable scannable;
-    private final Printable printable;
-
-    /**
-     * Конструктор класса ReplaceIfLowe
-     *
-     * @param collection    - Поле collection
-     * @param key           - Поле key
-     * @param dragonBuilder - Поле dragonBuilder
-     * @param scannable
-     * @param printable
-     */
-    public ReplaceIfLower(Integer key, DragonBuilder dragonBuilder, HashTableCollection<Integer, Dragon> collection, Scannable scannable, Printable printable) {
-        this.collection = collection;
-        this.key = key;
-        this.dragonBuilder = dragonBuilder;
-        this.scannable = scannable;
-        this.printable = printable;
-    }
+public class ReplaceIfLower extends Command {
 
 
     /**
@@ -54,11 +22,11 @@ public class ReplaceIfLower implements Command {
      * Замена элемента, если значение нового элемента меньше старого
      */
     @Override
-    public void execute() throws Exception {
-        Dragon dragon = dragonBuilder.build(scannable, printable);
-        if (dragon.compareTo(collection.get(key)) < 0) {
-            collection.remove(key);
-            collection.put(key, dragon);
+    public void execute(List<Object> args, Response response) throws Exception {
+        Dragon dragon = (Dragon) args.get(1);
+        Integer key = (Integer) args.get(0);
+        if (dragon.compareTo(Main.collection.get(key)) < 0) {
+            Main.collection.replace(key, dragon);
         }
 
     }

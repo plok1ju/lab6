@@ -2,6 +2,7 @@ package server.io;
 
 import server.exceptions.ServerException;
 import server.utils.ConnectionCheck;
+import server.utils.Response;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -10,8 +11,8 @@ import java.nio.charset.StandardCharsets;
 
 public class ServerPrinter implements Printable{
 
-    private OutputStream out;
-    private Socket clientSocket;
+    private final OutputStream out;
+    private final Socket clientSocket;
 
     public ServerPrinter(Socket clientSocket) throws IOException {
         this.out = clientSocket.getOutputStream();
@@ -20,13 +21,11 @@ public class ServerPrinter implements Printable{
 
 
     @Override
-    public void printLine(String line) throws Exception {
+    public void print(Response response) throws Exception {
         if (!ConnectionCheck.isConnected(clientSocket)){
             throw new ServerException();
         }
         try {
-            out.write(line.concat("\n").getBytes(StandardCharsets.UTF_8));
-            out.flush();
         } catch (Exception e){
             throw new ServerException();
         }

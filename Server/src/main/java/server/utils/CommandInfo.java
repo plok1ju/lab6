@@ -1,49 +1,21 @@
 package server.utils;
 
+import java.util.List;
+
 public class CommandInfo {
+    private final String commandName;
+    private final List<Object> args;
 
-    private boolean status = true;
-    private int simpleArguments;
-    private int complexArguments;
-    private String name;
-
-
-    public CommandInfo(){}
-    public CommandInfo(int simpleArguments, int complexArguments, String name) {
-        this.simpleArguments = simpleArguments;
-        this.complexArguments = complexArguments;
-        this.name = name;
+    public CommandInfo(String commandName, List<Object> args) {
+        this.commandName = commandName;
+        this.args = args;
     }
 
-    public boolean isStatus() {
-        return status;
+    public List<Object> getArgs() {
+        return args;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-
-    public int getSimpleArguments() {
-        return simpleArguments;
-    }
-
-    public void setSimpleArguments(int simpleArguments) {
-        this.simpleArguments = simpleArguments;
-    }
-
-    public int getComplexArguments() {
-        return complexArguments;
-    }
-
-    public void setComplexArguments(int complexArguments) {
-        this.complexArguments = complexArguments;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public String getCommandName() {
+        return commandName;
     }
 }

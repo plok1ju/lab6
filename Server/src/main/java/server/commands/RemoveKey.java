@@ -1,45 +1,28 @@
 package server.commands;
 
-import server.collection.HashTableCollection;
+import server.Main;
 import server.exceptions.CollectionException;
+import server.io.Printable;
+import server.utils.Response;
+
+import java.util.List;
 
 /**
  * Класс отвечает за удаление элементов по значению ключа
  */
-public class RemoveKey implements Command {
-
-    /**
-     * Поле collection
-     * {@link HashTableCollection}
-     */
-    private final HashTableCollection<? extends Integer, ?> collection;
-
-    /**
-     * Поле key
-     */
-    private final Integer key;
-
-    /**
-     * Конструктор класса RemoveKey
-     *
-     * @param collection - Поле collection
-     * @param key        - Поле key
-     */
-    public RemoveKey(Integer key, HashTableCollection<? extends Integer, ?> collection) {
-        this.collection = collection;
-        this.key = key;
-    }
+public class RemoveKey extends Command {
 
     /**
      * Переопределение метода execute
      * Удаление элемента из коллекции по ключу
      */
     @Override
-    public void execute() throws Exception {
-        if (!collection.getKeysAsList().contains(key)) {
+    public void execute(List<Object> args, Response response) throws Exception {
+        Integer key = (Integer) args.get(0);
+        if (!Main.collection.getKeysAsList().contains(key)) {
             throw new CollectionException("Нет такого key");
         }
-        collection.remove(key);
+        Main.collection.remove(key);
     }
 
 

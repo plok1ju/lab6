@@ -1,61 +1,28 @@
 package server.commands;
 
-import server.collection.HashTableCollection;
+import server.Main;
 import server.exceptions.CollectionException;
 import server.io.Printable;
-import server.io.Scannable;
 import server.model.Dragon;
+import server.utils.Response;
+
+import java.util.List;
 
 /**
  * Класс отвечает за добавление нового элемента в коллекцию
  */
-public class Insert implements Command {
-
-    /**
-     * Поле collection
-     * {@link HashTableCollection}
-     */
-    private final HashTableCollection<Integer, Dragon> collection;
-
-    /**
-     * Поле key
-     */
-    private final Integer key;
-
-    /**
-     * Поле dragon
-     * {@link Dragon}
-     */
-    private final Dragon dragon;
-    private final Scannable scannable;
-    private final Printable printable;
-
-    /**
-     * Конструктор класса Insert
-     *
-     * @param key           - Поле key
-     * @param dragon - Поле dragonBuilder
-     * @param collection    - Поле collection
-     */
-    public Insert(Integer key, Dragon dragon, HashTableCollection<Integer, Dragon> collection, Scannable scannable, Printable printable) {
-        this.collection = collection;
-        this.key = key;
-        this.dragon = dragon;
-        this.scannable = scannable;
-        this.printable = printable;
-    }
-
+public class Insert extends Command {
     /**
      * Переопределение метода execute
      * Добавление элемента в коллекцию
      */
     @Override
-    public void execute() throws Exception {
-        if (collection.getKeysAsList().contains(key)) {
+    public void execute(List<Object> args, Response response) throws Exception {
+        Integer key = (Integer) args.get(0);
+        if (Main.collection.getKeysAsList().contains(key)) {
             throw new CollectionException("Элемент с таким key уже есть");
         }
-        Dragon dragon = this.dragon;
-        collection.put(key, dragon);
+        Main.collection.put(key, (Dragon) args.get(1));
 
     }
 }

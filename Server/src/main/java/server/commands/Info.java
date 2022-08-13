@@ -1,39 +1,24 @@
 package server.commands;
 
+import server.Main;
 import server.collection.HashTableCollection;
 import server.io.Printable;
+import server.utils.Response;
+
+import java.util.List;
 
 /**
  * Класс отвечает за вывод информации о коллекции
  */
-public class Info implements Command {
-
-    /**
-     * Поле collection
-     * {@link HashTableCollection}
-     */
-    private final HashTableCollection<?, ?> collection;
-    private final Printable printable;
-
-
-    /**
-     * Конструктор класса Info
-     *
-     * @param collection - Поле collection
-     * @param printable
-     */
-    public Info(HashTableCollection<?, ?> collection, Printable printable) {
-        this.collection = collection;
-        this.printable = printable;
-    }
+public class Info extends Command {
 
     /**
      * Переопределение метода execute
      * Вывод информации о коллекции
      */
-    public void execute() throws Exception {
-        printable.printLine("Тип элемента коллекции: " + collection.getClass().getSimpleName() + "\n"
-                + "Дата создания коллекции: " + collection.getDateTime() + "\n"
-                + "Количество элементов: " + collection.size());
+    public void execute(List<Object> objects, Response response) throws Exception {
+        response.Add("Тип элемента коллекции: " + Main.collection.getClass().getSimpleName() + "\n"
+                + "Дата создания коллекции: " + Main.collection.getDateTime() + "\n"
+                + "Количество элементов: " + Main.collection.size());
     }
 }

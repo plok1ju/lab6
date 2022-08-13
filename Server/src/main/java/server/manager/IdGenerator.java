@@ -18,7 +18,7 @@ public class IdGenerator {
      * @return - число типа Long
      */
     public static Long getId() {
-        Long randomNextLong = random.nextLong();
+        long randomNextLong = random.nextLong();
         return (randomNextLong <= 0 ? getId() : randomNextLong);
     }
 }

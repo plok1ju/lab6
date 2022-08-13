@@ -1,56 +1,31 @@
 package server.commands;
 
 
-import server.collection.HashTableCollection;
+import server.Main;
 import server.comparators.CollectionComparator;
 import server.exceptions.ServerException;
 import server.io.Printable;
-import server.model.Dragon;
+import server.utils.Response;
 
 import java.util.List;
 
 /**
  * Класс отвечает за вывод коллекции в порядке убывания
  */
-public class PrintDescending implements Command {
-
-    /**
-     * Поле collection
-     * {@link HashTableCollection}
-     */
-    private final HashTableCollection<Integer, Dragon> collection;
-    private final Printable printable;
-
-    /**
-     * Конструктор класса PrintDescending
-     *
-     * @param collection - Поле collection
-     * @param printable
-     */
-    public PrintDescending(HashTableCollection<Integer, Dragon> collection, Printable printable) {
-        this.collection = collection;
-        this.printable = printable;
-    }
+public class PrintDescending extends Command {
 
     /**
      * Переопределение метода execute
      * Вывод элементов коллекции
      */
     @Override
-    public void execute() throws ServerException {
-        List<Integer> keys = collection.getKeysAsList();
-        keys.sort(new CollectionComparator(collection).reversed()); // реверс ключей
+    public void execute(List<Object> args, Response response) throws ServerException {
+        List<Integer> keys = Main.collection.getKeysAsList();
+        keys.sort(new CollectionComparator(Main.collection).reversed()); // реверс ключей
         for (Integer key : keys) {
-            Object o = collection.get(key);
-            try {
-                printable.printLine("=====\n");
-                printable.printLine("Ключ элемента " + key + ": " + o + "\n");
-            } catch (ServerException serverException) {
-                throw serverException;
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
+            Object o = Main.collection.get(key);
+            response.Add("=====\n");
+            response.Add("Ключ элемента " + key + ": " + o + "\n");
         }
     }
 }

@@ -21,19 +21,9 @@ public class PersonBuilder {
      */
     private final Person person;
 
-    /**
-     * Поле определяющее ввод из консоли
-     */
-    private final boolean isConsole;
 
-    /**
-     * Конструктор класса PersonBuilder
-     *
-     * @param isConsole - значение поля isConsole
-     */
-    public PersonBuilder(boolean isConsole) {
+    public PersonBuilder() {
         person = new Person();
-        this.isConsole = isConsole;
     }
 
     /**
@@ -58,26 +48,15 @@ public class PersonBuilder {
      * @param scannable - значение объекта scannable
      */
     private void buildName(Scannable scannable, Printable printable) throws Exception {
-        if (isConsole) {
-            try {
-                printable.printLine("Введите имя человека: ");
-                String nameKiller = scannable.scanString();
-                person.setName(nameKiller);
-            } catch (ServerException serverException){
-                throw serverException;
-            }
-            catch (Exception e) {
-                printable.printLine("Что-то пошло не так: " + e.getMessage());
-                this.buildName(scannable, printable);
-            }
-
-        } else {
-            String name = scannable.scanString();
-            if (name.equals("")) {
-                throw new CollectionException();
-            }
-            person.setName(name);
-
+        try {
+            printable.printLine("Введите имя человека: ");
+            String nameKiller = scannable.scanString();
+            person.setName(nameKiller);
+        } catch (ServerException serverException) {
+            throw serverException;
+        } catch (Exception e) {
+            printable.printLine("Что-то пошло не так: " + e.getMessage());
+            this.buildName(scannable, printable);
         }
     }
 
@@ -87,21 +66,15 @@ public class PersonBuilder {
      * @param scannable - значение поля scannable
      */
     private void buildBirthday(Scannable scannable, Printable printable) throws Exception {
-        if (isConsole) {
-            try {
-                printable.printLine("Введите дату рождения в формате yyyy-MM-dd HH:mm: ");
-                LocalDateTime birthday = LocalDateTime.parse(scannable.scanString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-                person.setBirthday(birthday);
-            } catch (ServerException serverException){
-                throw serverException;
-            }
-            catch (Exception e) {
-                printable.printLine("Что-то пошло не так: " + e.getMessage());
-                this.buildBirthday(scannable, printable);
-            }
-        } else {
+        try {
+            printable.printLine("Введите дату рождения в формате yyyy-MM-dd HH:mm: ");
             LocalDateTime birthday = LocalDateTime.parse(scannable.scanString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
             person.setBirthday(birthday);
+        } catch (ServerException serverException) {
+            throw serverException;
+        } catch (Exception e) {
+            printable.printLine("Что-то пошло не так: " + e.getMessage());
+            this.buildBirthday(scannable, printable);
         }
     }
 
@@ -111,26 +84,8 @@ public class PersonBuilder {
      * @param scannable - значение поля scannable
      */
     private void buildHeight(Scannable scannable, Printable printable) throws Exception {
-        if (isConsole) {
-            try {
-                printable.printLine("Введите рост человека:");
-                String heightString = scannable.scanString();
-                Long height;
-                if (!heightString.equals("")) {
-                    height = Long.parseLong(heightString);
-                } else {
-                    height = null;
-                }
-                person.setHeight(height);
-
-            } catch (ServerException serverException){
-                throw serverException;
-            }
-            catch (Exception e) {
-                printable.printLine("Что-то пошло не так: " + e.getMessage());
-                this.buildHeight(scannable, printable);
-            }
-        } else {
+        try {
+            printable.printLine("Введите рост человека:");
             String heightString = scannable.scanString();
             Long height;
             if (!heightString.equals("")) {
@@ -139,6 +94,12 @@ public class PersonBuilder {
                 height = null;
             }
             person.setHeight(height);
+
+        } catch (ServerException serverException) {
+            throw serverException;
+        } catch (Exception e) {
+            printable.printLine("Что-то пошло не так: " + e.getMessage());
+            this.buildHeight(scannable, printable);
         }
     }
 
@@ -148,25 +109,18 @@ public class PersonBuilder {
      * @param scannable - значение поля scannable
      */
     private void buildPassportID(Scannable scannable, Printable printable) throws Exception {
-        if (isConsole) {
-            try {
-                printable.printLine("Введите ID паспорта: ");
-                String passportId = scannable.scanString();
-
-                person.setPassportID(passportId);
-            } catch (ServerException serverException){
-                throw serverException;
-            }
-            catch (Exception e) {
-                printable.printLine("Что-то пошло не так: " + e.getMessage());
-                this.buildPassportID(scannable, printable);
-            }
-
-        } else {
+        try {
+            printable.printLine("Введите ID паспорта: ");
             String passportId = scannable.scanString();
-            person.setPassportID(passportId);
 
+            person.setPassportID(passportId);
+        } catch (ServerException serverException) {
+            throw serverException;
+        } catch (Exception e) {
+            printable.printLine("Что-то пошло не так: " + e.getMessage());
+            this.buildPassportID(scannable, printable);
         }
+
     }
 
     /**
@@ -175,21 +129,15 @@ public class PersonBuilder {
      * @param scannable - значение поля scannable
      */
     private void buildNationality(Scannable scannable, Printable printable) throws Exception {
-        if (isConsole) {
-            try {
-                printable.printLine("Выберете одну из предложенных национальностей: " + Country.getValues());
-                Country nationality = Country.parse(scannable.scanString());
-                person.setNationality(nationality);
-            } catch (ServerException serverException){
-                throw serverException;
-            }
-            catch (Exception e) {
-                printable.printLine("Что-то пошло не так: " + e.getMessage());
-                this.buildNationality(scannable, printable);
-            }
-        } else {
+        try {
+            printable.printLine("Выберете одну из предложенных национальностей: " + Country.getValues());
             Country nationality = Country.parse(scannable.scanString());
             person.setNationality(nationality);
+        } catch (ServerException serverException) {
+            throw serverException;
+        } catch (Exception e) {
+            printable.printLine("Что-то пошло не так: " + e.getMessage());
+            this.buildNationality(scannable, printable);
         }
     }
 
