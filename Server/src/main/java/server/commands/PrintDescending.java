@@ -4,7 +4,6 @@ package server.commands;
 import server.Main;
 import server.comparators.CollectionComparator;
 import server.exceptions.ServerException;
-import server.io.Printable;
 import server.utils.Response;
 
 import java.util.List;

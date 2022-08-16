@@ -1,9 +1,6 @@
 package server.commands;
 
 import server.Main;
-import server.collection.HashTableCollection;
-import server.io.Printable;
-import server.model.Ageable;
 import server.utils.Response;
 
 import java.util.List;

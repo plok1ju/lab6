@@ -1,21 +1,21 @@
 package server.io;
 
-import server.exceptions.ServerException;
-import server.utils.ConnectionCheck;
-import server.utils.Response;
+import org.helper.ConnectionCheck;
+import org.helper.Printable;
+import org.helper.Response;
+import org.helper.exceptions.ServerException;
 
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 
-public class ServerPrinter implements Printable{
+public class ServerPrinter implements Printable<Response> {
 
-    private final OutputStream out;
+    private final ObjectOutputStream out;
     private final Socket clientSocket;
 
     public ServerPrinter(Socket clientSocket) throws IOException {
-        this.out = clientSocket.getOutputStream();
+        this.out = new ObjectOutputStream(clientSocket.getOutputStream());
         this.clientSocket = clientSocket;
     }
 
@@ -25,10 +25,7 @@ public class ServerPrinter implements Printable{
         if (!ConnectionCheck.isConnected(clientSocket)){
             throw new ServerException();
         }
-        try {
-        } catch (Exception e){
-            throw new ServerException();
-        }
+        out.writeObject(response);
     }
 
     @Override

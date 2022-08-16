@@ -1,8 +1,6 @@
 package server.commands;
 
 import server.Main;
-import server.collection.HashTableCollection;
-import server.io.Printable;
 import server.utils.Response;
 
 import java.util.List;
@@ -17,8 +15,13 @@ public class Info extends Command {
      * Вывод информации о коллекции
      */
     public void execute(List<Object> objects, Response response) throws Exception {
-        response.Add("Тип элемента коллекции: " + Main.collection.getClass().getSimpleName() + "\n"
-                + "Дата создания коллекции: " + Main.collection.getDateTime() + "\n"
-                + "Количество элементов: " + Main.collection.size());
+        try {
+            response.Add("Тип элемента коллекции: " + Main.collection.getClass().getSimpleName() + "\n"
+                    + "Дата создания коллекции: " + Main.collection.getDateTime() + "\n"
+                    + "Количество элементов: " + Main.collection.size());
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 }

@@ -1,22 +1,21 @@
 package server.io;
 
-import server.exceptions.ServerException;
-import server.utils.CommandInfo;
-import server.utils.ConnectionCheck;
+import org.helper.CommandInfo;
+import org.helper.ConnectionCheck;
+import org.helper.Scannable;
+import org.helper.exceptions.ServerException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.net.Socket;
 
-public class ServerReader implements Scannable{
+public class ServerReader implements Scannable<CommandInfo> {
 
-    private final BufferedReader bufferedInputStream;
+    private final ObjectInputStream inputStream;
     private final Socket clientSocket;
-    private int lines = 0;
 
     public ServerReader(Socket clientSocket) throws Exception {
-        bufferedInputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        inputStream = new ObjectInputStream(clientSocket.getInputStream());
         this.clientSocket = clientSocket;
     }
     @Override
@@ -24,31 +23,12 @@ public class ServerReader implements Scannable{
         if (!ConnectionCheck.isConnected(clientSocket)){
             throw new ServerException();
         }
-        ++lines;
-        try {
-            String string = bufferedInputStream.readLine();
-            if (string == null){
-                throw new ServerException();
-            }
-            return null;
-        } catch (Exception e){
-
-            throw new ServerException();
-        }
+        return (CommandInfo) inputStream.readObject();
     }
 
-    @Override
-    public boolean hasNextLine() throws IOException {
-        return bufferedInputStream.ready();
-    }
-
-    @Override
-    public int linesCount() {
-        return lines;
-    }
 
     @Override
     public void close() throws IOException {
-        bufferedInputStream.close();
+        inputStream.close();
     }
 }

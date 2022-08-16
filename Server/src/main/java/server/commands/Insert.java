@@ -2,7 +2,6 @@ package server.commands;
 
 import server.Main;
 import server.exceptions.CollectionException;
-import server.io.Printable;
 import server.model.Dragon;
 import server.utils.Response;
 

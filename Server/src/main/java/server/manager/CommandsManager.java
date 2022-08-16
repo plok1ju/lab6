@@ -1,9 +1,7 @@
 package server.manager;
 
+import org.helper.Response;
 import server.commands.*;
-import server.io.*;
-import server.utils.Response;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,10 +16,10 @@ public class CommandsManager {
     static {
         descCommands = new ArrayList<>();
         commands = new ArrayList<>();
-        commands.add(new RemoveGreaterKey());
-        commands.add(new RemoveKey());
         commands.add(new Help());
-        descCommands.add("Remove by greater");
+        commands.add(new Info());
+        descCommands.add("Info");
+        descCommands.add("Help");
     }
 
     public static List<Command> getCommands() {

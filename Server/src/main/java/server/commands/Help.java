@@ -1,6 +1,5 @@
 package server.commands;
 
-import server.io.Printable;
 import server.manager.CommandsManager;
 import server.utils.Response;
 

@@ -1,7 +1,5 @@
 package client.io;
 
-import server.io.Scannable;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -10,7 +8,7 @@ import java.io.IOException;
 /**
  * Этот класс помогает читать данные из файла
  */
-public class FileScan implements Scannable {
+public class FileScan implements Scannable<String> {
 
     /**
      * Поле reader
@@ -34,29 +32,9 @@ public class FileScan implements Scannable {
      * @return - считанная строка из файла
      */
     @Override
-    public String scanString() throws IOException {
+    public String scan() throws IOException {
         ++count;
         return reader.readLine();
-    }
-
-    /**
-     * Метод проверяет читается ли файл
-     *
-     * @return - true - если читается, false - если нет
-     */
-    @Override
-    public boolean hasNextLine() throws IOException {
-        return reader.ready();
-    }
-
-    /**
-     * Возвращает число строк
-     *
-     * @return count - возвращает count
-     */
-    @Override
-    public int linesCount() {
-        return count;
     }
 
     @Override

@@ -1,21 +1,17 @@
 package client.io;
 
-import server.io.Scannable;
-
 import java.io.IOException;
 import java.util.Scanner;
 
 /**
  * Этот класс помогает читать данные с консоли
  */
-public class ConsoleScan implements Scannable {
+public class ConsoleScan implements Scannable<String> {
 
     /**
      * Поле scanner
      */
     private final Scanner scanner;
-
-    private int count;
 
     /**
      * Конструктор класса ConsoleScan
@@ -30,11 +26,7 @@ public class ConsoleScan implements Scannable {
      * @return - считанная строка
      */
     @Override
-    public String scanString() throws IOException {
-        if (!hasNextLine()) {
-            System.exit(0);
-        }
-        ++count;
+    public String scan() throws IOException {
         return scanner.nextLine();
     }
 
@@ -43,20 +35,6 @@ public class ConsoleScan implements Scannable {
      *
      * @return - true - если есть линия, false - если нет
      */
-    @Override
-    public boolean hasNextLine() throws IOException {
-        return scanner.hasNextLine();
-    }
-
-    /**
-     * Возвращает число строк
-     *
-     * @return count - возвращает count
-     */
-    @Override
-    public int linesCount() {
-        return count;
-    }
 
     @Override
     public void close() throws IOException {
