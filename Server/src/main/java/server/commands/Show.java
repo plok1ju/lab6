@@ -1,10 +1,9 @@
 package server.commands;
 
+import org.helper.Response;
+import org.helper.exceptions.CollectionException;
+import org.helper.exceptions.ServerException;
 import server.Main;
-import server.exceptions.CollectionException;
-import server.exceptions.ServerException;
-import server.utils.Response;
-
 import java.util.List;
 
 /**

@@ -2,15 +2,17 @@ package server;
 
 import org.helper.CommandInfo;
 import org.helper.Response;
-import org.helper.Scannable;
 import org.helper.model.Dragon;
+import org.helper.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import server.collection.HashTableCollection;
+import org.helper.HashTableCollection;
 import server.io.ServerPrinter;
 import server.io.ServerReader;
 import server.manager.CommandsManager;
 import server.manager.file.FileSaver;
+
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -25,6 +27,14 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         collection = fileSaver.readValue();
+
+        User user = Database.getUser("login11", "password11");
+        System.out.println(user);
+
+        Database.CreateUser(new User("login11", "password11", 0));
+
+        user = Database.getUser("login11", "password11");
+        System.out.println(user.getLogin() + " " + user.getPassword());
 
         ServerSocket server = new ServerSocket(50);
         commandsManager = new CommandsManager();

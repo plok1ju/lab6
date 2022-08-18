@@ -1,9 +1,8 @@
 package server.commands;
 
+import org.helper.Response;
+import org.helper.model.Color;
 import server.Main;
-import server.model.Color;
-import server.utils.Response;
-
 import java.util.List;
 
 /**

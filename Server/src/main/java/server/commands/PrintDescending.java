@@ -1,11 +1,10 @@
 package server.commands;
 
 
+import org.helper.Response;
+import org.helper.comparators.CollectionComparator;
+import org.helper.exceptions.ServerException;
 import server.Main;
-import server.comparators.CollectionComparator;
-import server.exceptions.ServerException;
-import server.utils.Response;
-
 import java.util.List;
 
 /**

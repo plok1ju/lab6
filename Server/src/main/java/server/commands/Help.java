@@ -1,8 +1,7 @@
 package server.commands;
 
+import org.helper.Response;
 import server.manager.CommandsManager;
-import server.utils.Response;
-
 import java.util.List;
 
 /**

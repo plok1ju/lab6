@@ -6,7 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.helper.exceptions.CollectionException;
 import org.helper.model.Dragon;
 import server.Main;
-import server.collection.HashTableCollection;
+import org.helper.HashTableCollection;
 import server.manager.FileManager;
 
 import java.io.File;

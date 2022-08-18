@@ -1,7 +1,7 @@
 package server.commands;
 
+import org.helper.Response;
 import server.Main;
-import server.utils.Response;
 
 import java.util.List;
 
