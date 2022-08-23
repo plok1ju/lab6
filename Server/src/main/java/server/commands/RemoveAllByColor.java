@@ -1,0 +1,20 @@
+package server.commands;
+
+import org.helper.Response;
+import org.helper.model.Color;
+import server.Main;
+import java.util.List;
+
+/**
+ * Класс отвечает за удаление элементов по цвету
+ */
+public class RemoveAllByColor extends Command {
+    @Override
+    public void execute(List<Object> args, Response response) {
+        List<?> keys = Main.collection.getKeysAsList();
+        Color color = (Color) args.get(0);
+        keys.stream().filter(key -> Main.collection.get(key).getColor().equals(color)).forEach(Main.collection::remove); // берет поток всех ключей, оставляет только нужные, и пробегается и удаляет
+    }
+
+
+}
